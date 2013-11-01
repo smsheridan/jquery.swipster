@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <title>Swipster - Demo</title>
+        <meta name="description" content="Swipster - Demo">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+        <!-- Le styles
+        =================================== -->
+        <link rel="stylesheet" href="../build/swipster.css">
+    </head>
+
+    <body>
+        <div id="swipster">
+            <div class="swipster__slide">
+                <img src="http://placehold.it/1400x600&text=placeholder1" alt="placeholder">
+            </div>
+
+            <div class="swipster__slide">
+                <img src="http://placehold.it/1400x600&text=placeholder2" alt="placeholder">
+            </div>
+
+            <div class="swipster__slide">
+                <img src="http://placehold.it/1400x600&text=placeholder3" alt="placeholder">
+            </div>
+
+            <div class="swipster__slide">
+                <img src="http://placehold.it/1400x600&text=placeholder4" alt="placeholder">
+            </div>
+
+            <div class="swipster__slide">
+                <img src="http://placehold.it/1400x600&text=placeholder4" alt="placeholder">
+            </div>
+        </div>
+        
+        <!-- Le scripts
+        =================================== -->
+        <script src="../bower_components/jquery/jquery.js"></script>
+        <script src="../bower_components/jquery.transition/index.js"></script>
+        <script src="../source/swipster.js"></script>
+
+        <!-- Le Swipster!
+        =================================== -->
+        <script>
+            $(function () {
+                var swipster = new Swipster({
+                    el: '#swipster',
+                    fullscreen: true
+                }).init();
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,17 @@
+{
+    "name": "jquery.swipster",
+    "description": "Amazing slideshow for both desktop and mobile browsers",
+    "version": "1.0.0",
+    "keywords": [
+        "jquery",
+        "slideshow"
+    ],
+    "authors": [
+        "Marcus Lilja <marcus.lilja@gmail.com>"
+    ],
+    "main": "./source/swipster.js",
+    "dependencies": {
+        "jquery": "latest",
+        "jquery.transition": "https://github.com/marcuslilja/jquery.transition.git"
+    }
+}

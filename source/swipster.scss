@@ -1,0 +1,245 @@
+@import "compass";
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    @include box-sizing(border-box);
+}
+
+img {
+    max-width: 100%;
+}
+
+.swipster {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    /**
+     * Disable annoying apple menus, but what about Android you say?
+     */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+
+    @include translate3d(0, 0, 0);
+    @include backface-visibility(hidden);
+    @include perspective(1000px);
+
+    %animate {
+        @include transition(all 0.6s ease);
+    }
+
+    .animate-back {
+        @extend %animate;
+        @include transform(translate(100%, 0) translateZ(0));
+    }
+
+    .animate-forward {
+        @extend %animate;
+        @include transform(translate(-100%, 0) translateZ(0));
+    }
+}
+
+.swipster__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+//
+// Slides
+// ----------------------------------
+.swipster__slide {
+    text-align: center; // Added to center content width display: inline-block
+}
+
+.swipster__page--next,
+.swipster__page--prev,
+.swipster__page--current {
+    @include backface-visibility(hidden);
+    @include perspective(1000px);
+}
+
+.swipster__page--next, .swipster__page--prev {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.swipster__page--prev {
+    left: -100%;
+}
+
+.swipster__page--next {
+    left: 100%;
+}
+
+.swipster__page--current {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.swipster__slide {
+    @extend .swipster__page--current;
+}
+
+
+//
+// Counter
+// ----------------------------------
+.swipster__counter {
+    display: none;
+    z-index: 3083;
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    height: 0;
+    bottom: 2.8em;
+    text-shadow: none;
+    color: #fff;
+    //@extend %font-bold;
+    
+    .current,
+    .total {
+        display: inline-block;
+        min-width: 1.6em;
+    }
+    
+    .current {
+        text-align: right;
+    }
+    
+    .total {
+        text-align: left;
+    }
+    
+    .divider {
+        display: inline-block;
+        padding: 0 0.2em;
+        
+        &:after {
+            content: '/';
+        }
+    }
+    
+    .swipster.fullscreen & {
+
+    } 
+}
+
+.swipster__counter__wrapper {
+    line-height: 1;
+    padding: 0.3em 0;
+    border: 2px solid #fff;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+
+
+//
+// Navigation aka bullets
+// ----------------------------------
+.swipster__indicators {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    bottom: 40px;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.swipster__indicators li {
+    display: inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+    background-color: red;
+    width: 20px;
+    height: 20px;
+}
+
+.swipster__indicators li.active {
+    background-color: blue;
+}
+
+
+
+//
+// Buttons for fullscreen & favorite
+// ----------------------------------
+.swipster__button {
+    display: block;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 20px;
+    height: 20px;
+    background-color: red;
+}
+
+.swipster__button--fullscreen {
+    @extend .swipster__button;
+    
+    .swipster.fullscreen & {
+
+    }
+}
+
+
+
+//
+// Full screen overlay
+// ----------------------------------
+.swipster__fullscreen-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20000;
+    background-color: black;
+
+    @include opacity(0);
+
+    &.visible {
+        @include opacity(1);
+    }
+
+    &.animating {
+        @include transition(opacity 0.4s ease);
+    }
+}
+
+
+
+//
+// Prev & next buttons
+// ----------------------------------
+.swipster__button--next,
+.swipster__button--prev {
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: -30px;
+    width: 60px;
+    height: 60px;
+    background-color: red;
+}
+
+.swipster__button--next {
+    right: 0;
+}
+
+.swipster__button--prev {
+    left: 0;
+}
