@@ -30,7 +30,7 @@ img {
     @include perspective(1000px);
 
     %animate {
-        @include transition(all 0.6s ease);
+        @include transition(all 0.5s ease);
     }
 
     .animate-back {
@@ -56,7 +56,15 @@ img {
 // Slides
 // ----------------------------------
 .swipster__slide {
-    text-align: center; // Added to center content width display: inline-block
+    display: none;
+
+    &:first-child {
+        display: block;
+    }
+
+    .loaded & {
+        display: block;
+    }
 }
 
 .swipster__page--next,
