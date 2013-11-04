@@ -174,17 +174,14 @@ Swipster = (function() {
 
                 if ($target.attr('data-goto-slide')) {
                     this._indicatorClickHandler(event);
-                    return false;
                 }
 
                 if ($target.hasClass(this.buttonNextClass)) {
-                    this.next(event);
-                    return false;
+                    this.next();
                 }
 
                 if ($target.hasClass(this.buttonPrevClass)) {
-                    this.prev(event);
-                    return false;
+                    this.prev();
                 }
 
                 break;
@@ -217,8 +214,6 @@ Swipster = (function() {
                 this.gotoSlide(slideKey);    
             }
         }
-
-        event.preventDefault();
     };
 
     /* ======================================================================
@@ -354,7 +349,7 @@ Swipster = (function() {
      * Public next() Method, slides to next slide
      * ====================================================================== */
 
-    Swipster.prototype.next = function(event) {
+    Swipster.prototype.next = function() {
         if (!this.$inner.hasClass('animating')) {
             if (!this.basicMode) {
                 this.$inner
@@ -364,8 +359,6 @@ Swipster = (function() {
                 this._renderNextSlide();
             }
         }
-
-        event.preventDefault();
     };
 
     Swipster.prototype._nextAnimationEnd = function(event) {
@@ -377,7 +370,7 @@ Swipster = (function() {
      * Public prev() Method, slides to previous slide
      * ====================================================================== */
 
-    Swipster.prototype.prev = function(event) {
+    Swipster.prototype.prev = function() {
         if (!this.$inner.hasClass('animating')) {
             if (!this.basicMode) {
                 this.$inner
@@ -387,8 +380,6 @@ Swipster = (function() {
                 this._renderPrevSlide();
             }
         }
-
-        event.preventDefault();
     };
 
     Swipster.prototype._prevAnimationEnd = function(event) {
