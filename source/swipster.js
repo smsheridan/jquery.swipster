@@ -174,20 +174,21 @@ Swipster = (function() {
 
                 if ($target.attr('data-goto-slide')) {
                     this._indicatorClickHandler(event);
+                    event.preventDefault();
                 }
 
                 if ($target.hasClass(this.buttonNextClass)) {
                     this.next();
+                    event.preventDefault();
                 }
 
                 if ($target.hasClass(this.buttonPrevClass)) {
                     this.prev();
+                    event.preventDefault();
                 }
-
+                
                 break;
         }
-
-        event.preventDefault();
     };
 
     Swipster.prototype._indicatorClickHandler = function(event) {
