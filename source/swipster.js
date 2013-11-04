@@ -6,18 +6,13 @@ Swipster = (function() {
     function Swipster(options) {
         this.el = options.el;
         this.slides = [];
-        //this.fullscreenOpen = false;
 
         this.currentIndex = options.startPosition || 0;
         this.indicators = (typeof options.indicators === 'undefined') ? true : options.indicators;
         this.controls = (typeof options.controls === 'undefined') ? true : options.controls;
         this.counter = (typeof options.counter === 'undefined') ? true : options.counter;
-        this.fullscreen = (typeof options.fullscreen === 'undefined') ? false : options.fullscreen;
         this.basicMode = (typeof options.basicMode === 'undefined') ? false : options.basicMode;
 
-        /**
-         * Some custom classes
-         */
         this.mainClass = 'swipster';
         this.innerClass = 'swipster__inner';
         this.slideClass = 'swipster__slide';
@@ -79,10 +74,6 @@ Swipster = (function() {
         if (this.controls) {
             this._appendControls();
         }
-
-        if (this.fullscreen) {
-            this._appendFullScreenButton();
-        }
         
         if (this.counter) {
             this._appendCounter();
@@ -97,7 +88,6 @@ Swipster = (function() {
         this.$nextSlide = this.$el.find('.' + this.nextPageClass);
         this.$buttonNext = this.$el.find('.' + this.buttonNextClass);
         this.$buttonPrev = this.$el.find('.' + this.buttonPrevClass);
-        this.$buttonFullScreen = this.$el.find('.' + this.buttonFullScreenClass);
         this.$counterIndex = this.$el.find('.' + this.counterClass + ' .current');
     };
 
@@ -162,13 +152,6 @@ Swipster = (function() {
         this.$el.append(template);
     };
 
-    Swipster.prototype._appendFullScreenButton = function() {
-        var template = ''
-            + '<a href="#fullscreen" class="' + this.buttonFullScreenClass + '"></a>';
-
-        this.$el.append(template);
-    };
-
     Swipster.prototype._appendThumbnails = function() {
         var template = '<div class="' + this.thumbnailsClass + '">';
 
@@ -196,9 +179,7 @@ Swipster = (function() {
     Swipster.prototype.bindEvents = function() {
         this.$buttonPrev.on('click', $.proxy(this.prev, this));
         this.$buttonNext.on('click', $.proxy(this.next, this));
-        this.$buttonFullScreen.on('click', $.proxy(this._fullScreenClickHandler, this));
-        this.$indicators.on('click', 'li', $.proxy(this._bulletClickHandler, this));
-
+        this.$indicators.on('click', 'li', $.proxy(this._indicatorClickHandler, this));
         $(document).on('keydown', $.proxy(this._handleKeyDown, this));
 
         this.$inner.on('touchstart', $.proxy(this._onTouchStart, this));
@@ -206,7 +187,7 @@ Swipster = (function() {
         this.$inner.on('touchend', $.proxy(this._onTouchEnd, this));
     };
 
-    Swipster.prototype._bulletClickHandler = function(event) {
+    Swipster.prototype._indicatorClickHandler = function(event) {
         var slideIndex = parseInt($(event.target).attr('data-goto-page')) - 1
 
         if (!$(event.target).hasClass('active') && !this.$inner.hasClass('animating')) {
@@ -235,63 +216,6 @@ Swipster = (function() {
     };
 
     /* ======================================================================
-     * FullScreen Mode
-     * ====================================================================== */
-
-    Swipster.prototype._fullScreenClickHandler = function(event) {
-        /*if (!this.fullscreenOpen) {
-            this.openFullScreen();
-        } else {
-            this.closeFullScreen();
-        }*/
-        alert('open fullscreen');
-        event.preventDefault();
-    };
-
-    /*Swipster.prototype.openFullScreen = function(event) {
-        var animationQueue = new app.utilities.AnimationQueue()
-          , $overlay = $('<div class="swipster__fullscreen-overlay" />').appendTo('body');
-
-        animationQueue.add($overlay, $.proxy(function() {
-            $overlay.addClass('animating').redraw().addClass('visible');
-        }, this));
-
-        animationQueue.add(this.$el, $.proxy(function() {
-            this.fullscreenOpen = true;
-
-            this.$el.addClass('fullscreen').redraw().addClass('animating visible');
-            this.$body.addClass('fullscreen-overflow');
-        }, this));
-
-        animationQueue.run($.proxy(function() {
-            $overlay.removeClass('animating');
-            this.$el.removeClass('animating');
-        }, this));
-    };
-
-    Swipster.prototype.closeFullScreen = function(event) {
-        var animationQueue = new app.utilities.AnimationQueue()
-          , $overlay = $('.swipster__fullscreen-overlay');
-
-        animationQueue.add(this.$el, $.proxy(function() {
-            this.$el.addClass('animating').redraw().removeClass('visible');
-            $overlay.addClass('animating');
-        }, this));
-
-        animationQueue.add($overlay, $.proxy(function() {
-            this.fullscreenOpen = false;
-
-            this.$el.removeClass('fullscreen animating');
-            this.$body.removeClass('fullscreen-overflow');
-            $overlay.removeClass('visible');
-        }, this));
-
-        animationQueue.run($.proxy(function() {
-            $overlay.remove();
-        }, this));
-    };*/
-
-    /* ======================================================================
      * Keyboard Navigation
      * ====================================================================== */
 
@@ -299,7 +223,7 @@ Swipster = (function() {
      * @TODO: Add check if current slideshow is in viewport
      */
     Swipster.prototype._handleKeyDown = function(event) {
-        if (!$('html').hasClass('black-layer-active') && !this.$inner.hasClass('animating')) {
+        if (!this.$inner.hasClass('animating')) {
             var KEY_RIGHTARROW = 39, KEY_LEFTARROW = 37, KEY_ESC = 27;
             
             switch(event.keyCode) {
@@ -312,13 +236,6 @@ Swipster = (function() {
                     this.prev(event);
 
                     break;
-
-                /*case KEY_ESC:
-                    if (this.fullscreenOpen) {
-                        this.closeFullScreen(event)
-                    }
-
-                    break;*/
             }
         }
     };
@@ -327,6 +244,10 @@ Swipster = (function() {
      * Touch Handlers & Animations
      * ====================================================================== */
 
+    /**
+     * @TODO: Better touch handling
+     * @TODO: Remove commented code
+     */
     Swipster.prototype._onTouchStart = function(event) {
         if (this.touchObject.initiated) {
             return;
@@ -443,7 +364,6 @@ Swipster = (function() {
 
     Swipster.prototype._nextAnimationEnd = function(event) {
         this.$inner.removeClass('animating animate-forward');
-        //this.$inner.off(TransitionEnd, this._nextAnimationEnd);
         this._renderNextSlide();
     };
 
@@ -467,7 +387,6 @@ Swipster = (function() {
 
     Swipster.prototype._prevAnimationEnd = function(event) {
         this.$inner.removeClass('animating animate-back');
-        //this.$inner.off(TransitionEnd, this._nextAnimationEnd);
         this._renderPrevSlide();
     };
 
@@ -493,6 +412,8 @@ Swipster = (function() {
          *
          * This will result in a blank prev slide. Cloning the slide is the initial
          * solution, but it seems to affect performance.
+         *
+         * @TODO: Fix issue with going backwards if there is only two slides.
          */
         switch(this.currentIndex) {
             case this.slides.length - 1:
@@ -582,8 +503,7 @@ Swipster = (function() {
     Swipster.prototype.destroy = function() {
         this.$buttonPrev.off('click', this.prev);
         this.$buttonNext.off('click', this.next);
-        this.$buttonFullScreen.off('click', this._fullScreenClickHandler);
-        this.$indicators.off('click', 'li', this._bulletClickHandler);
+        this.$indicators.off('click', 'li', this._indicatorClickHandler);
         this.$inner.off('touchstart', this._onTouchStart);
         this.$inner.off('touchmove', this._onTouchMove);
         this.$inner.off('touchend', this._onTouchEnd);
@@ -592,7 +512,6 @@ Swipster = (function() {
         this.$inner.remove();
         this.$indicators.remove();
         this.$controls.remove();
-        this.$buttonFullScreen.remove();
     };
 
     return Swipster;
