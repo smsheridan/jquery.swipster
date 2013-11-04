@@ -60,6 +60,9 @@ Swipster = (function() {
      * Initial DOM manipulation and template structure
      * ====================================================================== */
 
+    /**
+     * @TODO: Append all data att the same time, not each part by itself on first init
+     */
     Swipster.prototype.createDOM = function() {
         this.$element.addClass(this.mainClass);
 
@@ -78,14 +81,12 @@ Swipster = (function() {
         }
 
         // Bind on elements created dynamically
-        this.$inner = this.$element.find('.' + this.innerClass);
-        this.$indicators = this.$element.find('.' + this.indicatorsClass);
-        this.$controls = this.$element.find('.' + this.controlsClass);
+        this.$inner = this.$element.children('.' + this.innerClass);
+        this.$indicators = this.$element.children('.' + this.indicatorsClass);
+        this.$controls = this.$element.children('.' + this.controlsClass);
         this.$currentSlide = this.$element.find('.' + this.currentPageClass);
         this.$prevSlide = this.$element.find('.' + this.prevPageClass);
         this.$nextSlide = this.$element.find('.' + this.nextPageClass);
-        this.$buttonNext = this.$element.find('.' + this.buttonNextClass);
-        this.$buttonPrev = this.$element.find('.' + this.buttonPrevClass);
         this.$counterIndex = this.$element.find('.' + this.counterClass + ' .current');
     };
 
@@ -119,7 +120,7 @@ Swipster = (function() {
             var classes = (i == 0 ? 'class="active"' : '');
             var index = i + 1;
 
-            template += '<li ' + classes + ' data-goto-page="' + index + '"></li>';
+            template += '<li ' + classes + ' data-goto-slide="' + index + '"></li>';
         }
 
         template += '</ol>';
@@ -158,9 +159,7 @@ Swipster = (function() {
      * @TODO: Bind on Swipster main wrapper, delegate events
      */
     Swipster.prototype.bindEvents = function() {
-        this.$buttonPrev.on('click', $.proxy(this.prev, this));
-        this.$buttonNext.on('click', $.proxy(this.next, this));
-        this.$indicators.on('click', 'li', $.proxy(this._indicatorClickHandler, this));
+        this.$element.on('click', $.proxy(this._handleClickEvents, this));
         $(document).on('keydown', $.proxy(this._handleKeyDown, this));
 
         this.$inner.on('touchstart', $.proxy(this._onTouchStart, this));
@@ -168,8 +167,34 @@ Swipster = (function() {
         this.$inner.on('touchend', $.proxy(this._onTouchEnd, this));
     };
 
+    Swipster.prototype._handleClickEvents = function(event) {
+        switch (event.type) {
+            case 'click':
+                $target = $(event.target);
+
+                if ($target.attr('data-goto-slide')) {
+                    this._indicatorClickHandler(event);
+                    return false;
+                }
+
+                if ($target.hasClass(this.buttonNextClass)) {
+                    this.next(event);
+                    return false;
+                }
+
+                if ($target.hasClass(this.buttonPrevClass)) {
+                    this.prev(event);
+                    return false;
+                }
+
+                break;
+        }
+
+        event.preventDefault();
+    };
+
     Swipster.prototype._indicatorClickHandler = function(event) {
-        var slideIndex = parseInt($(event.target).attr('data-goto-page')) - 1
+        var slideIndex = parseInt($(event.target).attr('data-goto-slide')) - 1
 
         if (!$(event.target).hasClass('active') && !this.$inner.hasClass('animating')) {
             if (!this.basicMode) {
@@ -422,7 +447,7 @@ Swipster = (function() {
 
     Swipster.prototype._renderIndicators = function() {
         this.$indicators.find('.active').removeClass('active');
-        this.$indicators.find('[data-goto-page=' + (this.currentIndex + 1) + ']').addClass('active');
+        this.$indicators.find('[data-goto-slide=' + (this.currentIndex + 1) + ']').addClass('active');
     };
 
     Swipster.prototype._renderCounter = function() {
@@ -482,9 +507,7 @@ Swipster = (function() {
     };
     
     Swipster.prototype.destroy = function() {
-        this.$buttonPrev.off('click', this.prev);
-        this.$buttonNext.off('click', this.next);
-        this.$indicators.off('click', 'li', this._indicatorClickHandler);
+        this.$element.off('click', this._handleClickEvents);
         this.$inner.off('touchstart', this._onTouchStart);
         this.$inner.off('touchmove', this._onTouchMove);
         this.$inner.off('touchend', this._onTouchEnd);
