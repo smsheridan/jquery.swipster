@@ -3,8 +3,8 @@
 var Swipster;
 
 Swipster = (function() {
-    function Swipster(options) {
-        this.el = options.el;
+    function Swipster(element, options) {
+        this.element = element;
         this.slides = [];
 
         this.currentIndex = options.startPosition || 0;
@@ -28,11 +28,13 @@ Swipster = (function() {
         this.counterClass = 'swipster__counter';
         this.thumbnailsClass = 'swipster__thumbnails';
         this.thumbnailClass = 'swipster__thumbnail';
+
+        this.init();
     }
 
     Swipster.prototype.init = function() {
         // Bind some jQuery stuff
-        this.$el = $(this.el);
+        this.$el = $(this.element);
         this.$body = $('body');
 
         // Other variables
