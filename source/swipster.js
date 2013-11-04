@@ -34,11 +34,11 @@ Swipster = (function() {
 
     Swipster.prototype.init = function() {
         // Bind some jQuery stuff
-        this.$el = $(this.element);
+        this.$element = $(this.element);
         this.$body = $('body');
 
         // Other variables
-        this.$el.find('.' + this.slideClass).each($.proxy(function(i, element) {
+        this.$element.find('.' + this.slideClass).each($.proxy(function(i, element) {
             this.slides[i] = element;
         }, this));
 
@@ -65,7 +65,7 @@ Swipster = (function() {
      * ====================================================================== */
 
     Swipster.prototype.createDOM = function() {
-        this.$el.addClass(this.mainClass);
+        this.$element.addClass(this.mainClass);
 
         this._appendSlides();
 
@@ -82,15 +82,15 @@ Swipster = (function() {
         }
 
         // Bind on elements created dynamically
-        this.$inner = this.$el.find('.' + this.innerClass);
-        this.$indicators = this.$el.find('.' + this.indicatorsClass);
-        this.$controls = this.$el.find('.' + this.controlsClass);
-        this.$currentSlide = this.$el.find('.' + this.currentPageClass);
-        this.$prevSlide = this.$el.find('.' + this.prevPageClass);
-        this.$nextSlide = this.$el.find('.' + this.nextPageClass);
-        this.$buttonNext = this.$el.find('.' + this.buttonNextClass);
-        this.$buttonPrev = this.$el.find('.' + this.buttonPrevClass);
-        this.$counterIndex = this.$el.find('.' + this.counterClass + ' .current');
+        this.$inner = this.$element.find('.' + this.innerClass);
+        this.$indicators = this.$element.find('.' + this.indicatorsClass);
+        this.$controls = this.$element.find('.' + this.controlsClass);
+        this.$currentSlide = this.$element.find('.' + this.currentPageClass);
+        this.$prevSlide = this.$element.find('.' + this.prevPageClass);
+        this.$nextSlide = this.$element.find('.' + this.nextPageClass);
+        this.$buttonNext = this.$element.find('.' + this.buttonNextClass);
+        this.$buttonPrev = this.$element.find('.' + this.buttonPrevClass);
+        this.$counterIndex = this.$element.find('.' + this.counterClass + ' .current');
     };
 
     Swipster.prototype._appendSlides = function() {
@@ -98,7 +98,7 @@ Swipster = (function() {
          * Wierd issue with removing elements with this.$inner.html(''), leads
          * to reference errors in IE. Resulting in slides being added as empty.
          */
-        this.$el.find('.' + this.slideClass).each(function() {
+        this.$element.find('.' + this.slideClass).each(function() {
             $(this).remove();
         });
 
@@ -113,7 +113,7 @@ Swipster = (function() {
          * Appending the template allows us to add static resources in the html,
          * like the swipster__fixed stuff.
          */
-        this.$el.append(template);
+        this.$element.append(template);
     };
 
     Swipster.prototype._appendIndicators = function() {
@@ -128,7 +128,7 @@ Swipster = (function() {
 
         template += '</ol>';
 
-        this.$el.append(template);
+        this.$element.append(template);
     };
 
     Swipster.prototype._appendControls = function() {
@@ -138,7 +138,7 @@ Swipster = (function() {
             +   '<a href="#prev" class="' + this.buttonNextClass + '"></a>'
             + '</div>'
         
-        this.$el.append(template);
+        this.$element.append(template);
     };
     
     Swipster.prototype._appendCounter = function() {
@@ -151,7 +151,7 @@ Swipster = (function() {
             +   '</div>'
             + '</div>'
         
-        this.$el.append(template);
+        this.$element.append(template);
     };
 
     Swipster.prototype._appendThumbnails = function() {
@@ -168,7 +168,7 @@ Swipster = (function() {
 
         template += '</div>';
 
-        this.$el.append(template);
+        this.$element.append(template);
     };
 
     /* ======================================================================
@@ -510,7 +510,7 @@ Swipster = (function() {
         this.$inner.off('touchmove', this._onTouchMove);
         this.$inner.off('touchend', this._onTouchEnd);
 
-        this.$el.prepend(this.slides);
+        this.$element.prepend(this.slides);
         this.$inner.remove();
         this.$indicators.remove();
         this.$controls.remove();
