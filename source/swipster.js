@@ -150,23 +150,6 @@ Swipster = (function() {
         this.$element.append(template);
     };
 
-    Swipster.prototype._appendThumbnails = function() {
-        var template = '<div class="' + this.thumbnailsClass + '">';
-
-        for (var i = 0; i < this.slides.length; i++) {
-            var backgroundImageString = this.slides[i].find('.swipster__background-image').attr('style')
-              , startPosition = backgroundImageString.indexOf('\'') + 1
-              , endPosition = backgroundImageString.indexOf('\'', startPosition)
-              , imageSource = backgroundImageString.substring(startPosition, endPosition);
-
-            template += '<img class="' + this.thumbnailClass + '" src="' + imageSource + '">';
-        }
-
-        template += '</div>';
-
-        this.$element.append(template);
-    };
-
     /* ======================================================================
      * Event Binding
      * ====================================================================== */
