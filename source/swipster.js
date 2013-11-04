@@ -23,11 +23,8 @@ Swipster = (function() {
         this.controlsClass = 'swipster__controls';
         this.buttonPrevClass = 'swipster__button--prev';
         this.buttonNextClass = 'swipster__button--next';
-        this.buttonFullScreenClass = 'swipster__button--fullscreen';
         this.indicatorsClass = 'swipster__indicators';
         this.counterClass = 'swipster__counter';
-        this.thumbnailsClass = 'swipster__thumbnails';
-        this.thumbnailClass = 'swipster__thumbnail';
 
         this.init();
     }
@@ -35,7 +32,6 @@ Swipster = (function() {
     Swipster.prototype.init = function() {
         // Bind some jQuery stuff
         this.$element = $(this.element);
-        this.$body = $('body');
 
         // Other variables
         this.$element.find('.' + this.slideClass).each($.proxy(function(i, element) {
