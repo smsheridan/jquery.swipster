@@ -226,8 +226,7 @@ Swipster = (function() {
          * @TODO: Add check if current slideshow is in viewport
          */
         _handleKeyDown: function(event) {
-            var KEY_RIGHTARROW = 39
-              , KEY_LEFTARROW = 37;
+            var KEY_RIGHTARROW = 39 , KEY_LEFTARROW = 37;
             
             switch(event.keyCode) {
                 case KEY_RIGHTARROW:
@@ -374,7 +373,7 @@ Swipster = (function() {
 
             if (!this.$inner.hasClass('animating')) {
                 this.$inner.css({
-                    '-webkit-transform': 'translate3d(' + touchOffset + 'px, 0, 0)'
+                    'transform': 'translate3d(' + touchOffset + 'px, 0, 0)'
                 });
             }
 
@@ -407,8 +406,8 @@ Swipster = (function() {
                 }
 
                 this.$inner.css({
-                    '-webkit-transition': 'all 0.3s ease',
-                    '-webkit-transform': 'translate3d(' + transitionDirection + ', 0, 0)'
+                    'transition': 'all 0.3s ease',
+                    'transform': 'translate3d(' + transitionDirection + ', 0, 0)'
                 });
 
                 this.$inner.transitionEnd($.proxy(this._touchAnimationEnd, this));
