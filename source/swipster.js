@@ -3,15 +3,20 @@
 var Swipster;
 
 Swipster = (function() {
+    var defaults = {
+        startPosition: 0,
+        indicators: true,
+        controls: true,
+        counter: true,
+        basicMode: false
+    }
+
     function Swipster(element, options) {
         this.element = element;
         this.slides = [];
 
-        this.currentIndex = options.startPosition || 0;
-        this.indicators = (typeof options.indicators === 'undefined') ? true : options.indicators;
-        this.controls = (typeof options.controls === 'undefined') ? true : options.controls;
-        this.counter = (typeof options.counter === 'undefined') ? true : options.counter;
-        this.basicMode = (typeof options.basicMode === 'undefined') ? false : options.basicMode;
+        this.options = $.extend({}, defaults, options);
+        this.currentIndex = this.options.startPosition;
 
         this.classes = {
             main: 'swipster',
@@ -75,15 +80,15 @@ Swipster = (function() {
 
         this._appendSlides();
 
-        if (this.indicators) {
+        if (this.options.indicators) {
             this._appendIndicators();
         }
 
-        if (this.controls) {
+        if (this.options.controls) {
             this._appendControls();
         }
         
-        if (this.counter) {
+        if (this.options.counter) {
             this._appendCounter();
         }
 
@@ -200,7 +205,7 @@ Swipster = (function() {
         var slideIndex = parseInt($(event.target).attr('data-goto-slide')) - 1
 
         if (!$(event.target).hasClass('active') && !this.$inner.hasClass('animating')) {
-            if (!this.basicMode) {
+            if (!this.options.basicMode) {
                 if (this.currentIndex < slideIndex) {
                     this._setNextSlideContent(slideIndex);
                     this._setIndex(slideIndex - 1);
@@ -357,7 +362,7 @@ Swipster = (function() {
 
     Swipster.prototype.next = function() {
         if (!this.$inner.hasClass('animating')) {
-            if (!this.basicMode) {
+            if (!this.options.basicMode) {
                 this.$inner
                     .addClass('animating animate-forward')
                     .transitionEnd($.proxy(this._nextAnimationEnd, this));
@@ -378,7 +383,7 @@ Swipster = (function() {
 
     Swipster.prototype.prev = function() {
         if (!this.$inner.hasClass('animating')) {
-            if (!this.basicMode) {
+            if (!this.options.basicMode) {
                 this.$inner
                     .addClass('animating animate-back')
                     .transitionEnd($.proxy(this._prevAnimationEnd, this));
