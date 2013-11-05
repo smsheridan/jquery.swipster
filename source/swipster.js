@@ -8,13 +8,15 @@ Swipster = (function() {
         indicators: true,
         controls: true,
         counter: true,
-        basicMode: false
+        basicMode: false,
+        interval: 5000
     }
 
     function Swipster(element, options) {
         this.element = element;
         this.$element = $(this.element);
         this.slides = [];
+        this.thread = null;
 
         if (!this._supports('transition')) {
             options.basicMode = true;
@@ -79,6 +81,16 @@ Swipster = (function() {
             this.$indicators.remove();
             this.$controls.remove();
             this.$counter.remove();
+        },
+
+        start: function() {
+            this.thread = setInterval($.proxy(function() {
+                this.next();
+            }, this), this.options.interval);
+        },
+
+        stop: function() {
+            clearInterval(this.thread);
         },
 
         /* ======================================================================
