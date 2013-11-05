@@ -46,7 +46,7 @@ Swipster = (function() {
         this.$element = $(this.element);
 
         // Other variables
-        this.$element.find('.' + this.classes.slide.main).each($.proxy(function(i, element) {
+        this.$element.children('.' + this.classes.slide.main).each($.proxy(function(i, element) {
             this.slides[i] = element;
         }, this));
 
@@ -71,13 +71,8 @@ Swipster = (function() {
     /* ======================================================================
      * Initial DOM manipulation and template structure
      * ====================================================================== */
-
-    /**
-     * @TODO: Append all data att the same time, not each part by itself on first init
-     */
+    
     Swipster.prototype.createDOM = function() {
-        this.$element.addClass(this.classes.main);
-
         var template = this._slideTemplate();
 
         if (this.options.indicators) {
@@ -92,7 +87,7 @@ Swipster = (function() {
             template += this._counterTemplate();
         }
 
-        this.$element.append(template);
+        this.$element.addClass(this.classes.main).append(template);
 
         // Bind on elements created dynamically
         this.$inner = this.$element.children('.' + this.classes.inner);
@@ -109,15 +104,13 @@ Swipster = (function() {
          * Wierd issue with removing elements with this.$inner.html(''), leads
          * to reference errors in IE. Resulting in slides being added as empty.
          */
-        this.$element.find('.' + this.classes.slide.main).each(function() {
-            $(this).remove();
-        });
+        this.$element.find('.' + this.classes.slide.main).remove();
 
         var template = ''
             + '<div class="' + this.classes.inner + '">'
-                + '<div class="' + this.classes.slide.prev + '">' + $(this.slides[this.slides.length - 1]).html() + '</div>'
-                + '<div class="' + this.classes.slide.current + '">' + $(this.slides[0]).html() + '</div>'
-                + '<div class="' + this.classes.slide.next + '">' + $(this.slides[1]).html() + '</div>'
+            +     '<div class="' + this.classes.slide.prev + '">' + $(this.slides[this.slides.length - 1]).html() + '</div>'
+            +     '<div class="' + this.classes.slide.current + '">' + $(this.slides[0]).html() + '</div>'
+            +     '<div class="' + this.classes.slide.next + '">' + $(this.slides[1]).html() + '</div>'
             + '</div>';
 
         return template;
@@ -141,8 +134,8 @@ Swipster = (function() {
     Swipster.prototype._controlsTemplate = function() {
         var template = ''
             + '<div class="' + this.classes.controls.main + '">'
-            +   '<a href="#next" class="' + this.classes.controls.prev + '"></a>'
-            +   '<a href="#prev" class="' + this.classes.controls.next + '"></a>'
+            +     '<a href="#next" class="' + this.classes.controls.prev + '"></a>'
+            +     '<a href="#prev" class="' + this.classes.controls.next + '"></a>'
             + '</div>'
         
         return template;
@@ -151,9 +144,9 @@ Swipster = (function() {
     Swipster.prototype._counterTemplate = function() {
         var template = ''
             + '<div class="' + this.classes.counter.main + '">'
-            +   '<span class="current">' + (this.currentIndex + 1) + '</span>'
-            +   '<span class="divider">/</span>'
-            +   '<span class="total">' + this.slides.length + '</span>'
+            +     '<span class="current">' + (this.currentIndex + 1) + '</span>'
+            +     '<span class="divider">/</span>'
+            +     '<span class="total">' + this.slides.length + '</span>'
             + '</div>'
         
         return template;
