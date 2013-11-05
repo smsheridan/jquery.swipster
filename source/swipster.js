@@ -23,12 +23,12 @@ Swipster = (function() {
         this.element = element;
         this.slides = [];
 
+        if (!this._supports('transition')) {
+            options.basicMode = true;
+        }
+
         this.options = $.extend({}, defaults, options);
         this.currentIndex = this.options.startPosition;
-
-        if (!this._supports('transition')) {
-            this.options.basicMode = true;
-        }
 
         this.classes = {
             main: 'swipster',
