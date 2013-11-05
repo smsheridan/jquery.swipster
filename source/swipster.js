@@ -112,8 +112,6 @@ Swipster = (function() {
     };
 
     Swipster.prototype._slideTemplate = function() {
-
-        
         var template = ''
             + '<div class="' + this.classes.inner + '">'
             +     '<div class="' + this.classes.slide.prev + '">' + $(this.slides[this.slides.length - 1]).html() + '</div>'
@@ -181,8 +179,11 @@ Swipster = (function() {
             case 'click':
                 $target = $(event.target);
 
-                if ($target.attr('data-goto-slide')) {
-                    this._indicatorClickHandler(event);
+                if ($target.parent().hasClass(this.classes.indicators)) {
+                    if (!$target.hasClass('active')) {
+                        this.animateToSlide($target.data('goto-slide'));
+                    }
+                    
                     event.preventDefault();
                 }
 
@@ -200,29 +201,31 @@ Swipster = (function() {
         }
     };
 
-    Swipster.prototype._indicatorClickHandler = function(event) {
-        var slideIndex = parseInt($(event.target).attr('data-goto-slide')) - 1
+    Swipster.prototype.animateToSlide = function(index) {
+        if (this.$inner.hasClass('animating')) {
+            return false;
+        }
 
-        if (!$(event.target).hasClass('active') && !this.$inner.hasClass('animating')) {
-            if (!this.options.basicMode) {
-                if (this.currentIndex < slideIndex) {
-                    this._setNextSlideContent(slideIndex);
-                    this._setIndex(slideIndex - 1);
+        index = index - 1;
 
-                    this.$inner
-                        .addClass('animating animate-forward')
-                        .transitionEnd($.proxy(this._nextAnimationEnd, this));
-                } else {
-                    this._setPrevSlideContent(slideIndex);
-                    this._setIndex(slideIndex + 1);
+        if (!this.options.basicMode) {
+            if (this.currentIndex < index) {
+                this._setNextSlideContent(index);
+                this._setIndex(index - 1);
 
-                    this.$inner
-                        .addClass('animating animate-back')
-                        .transitionEnd($.proxy(this._prevAnimationEnd, this));
-                }
+                this.$inner
+                    .addClass('animating animate-forward')
+                    .transitionEnd($.proxy(this._nextAnimationEnd, this));
             } else {
-                this.gotoSlide(slideKey);    
+                this._setPrevSlideContent(index);
+                this._setIndex(index + 1);
+
+                this.$inner
+                    .addClass('animating animate-back')
+                    .transitionEnd($.proxy(this._prevAnimationEnd, this));
             }
+        } else {
+            this.gotoSlide(slideKey);    
         }
     };
 
