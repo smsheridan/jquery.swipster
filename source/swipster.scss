@@ -67,36 +67,32 @@ img {
     }
 }
 
-.swipster__page--next,
-.swipster__page--prev,
-.swipster__page--current {
+.swipster__slide--next,
+.swipster__slide--prev,
+.swipster__slide--current {
     @include backface-visibility(hidden);
     @include perspective(1000px);
 }
 
-.swipster__page--next, .swipster__page--prev {
+.swipster__slide--next, .swipster__slide--prev {
     position: absolute;
     top: 0;
     width: 100%;
     height: 100%;
 }
 
-.swipster__page--prev {
+.swipster__slide--prev {
     left: -100%;
 }
 
-.swipster__page--next {
+.swipster__slide--next {
     left: 100%;
 }
 
-.swipster__page--current {
+.swipster__slide--current {
     position: relative;
     width: 100%;
     height: 100%;
-}
-
-.swipster__slide {
-    @extend .swipster__page--current;
 }
 
 
@@ -104,52 +100,15 @@ img {
 // Counter
 // ----------------------------------
 .swipster__counter {
-    display: none;
-    z-index: 3083;
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 50%;
+    bottom: 50px;
+    width: 40px;
+    height: 20px;
+    line-height: 20px;
+    margin-left: -20px;
     text-align: center;
-    height: 0;
-    bottom: 2.8em;
-    text-shadow: none;
-    color: #fff;
-    //@extend %font-bold;
-    
-    .current,
-    .total {
-        display: inline-block;
-        min-width: 1.6em;
-    }
-    
-    .current {
-        text-align: right;
-    }
-    
-    .total {
-        text-align: left;
-    }
-    
-    .divider {
-        display: inline-block;
-        padding: 0 0.2em;
-        
-        &:after {
-            content: '/';
-        }
-    }
-    
-    .swipster.fullscreen & {
-
-    } 
-}
-
-.swipster__counter__wrapper {
-    line-height: 1;
-    padding: 0.3em 0;
-    border: 2px solid #fff;
-    display: inline-block;
-    white-space: nowrap;
+    background-color: red;
 }
 
 
@@ -181,60 +140,11 @@ img {
 }
 
 
-
 //
-// Buttons for fullscreen & favorite
+// Prev & next controls
 // ----------------------------------
-.swipster__button {
-    display: block;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 20px;
-    height: 20px;
-    background-color: red;
-}
-
-.swipster__button--fullscreen {
-    @extend .swipster__button;
-    
-    .swipster.fullscreen & {
-
-    }
-}
-
-
-
-//
-// Full screen overlay
-// ----------------------------------
-.swipster__fullscreen-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 20000;
-    background-color: black;
-
-    @include opacity(0);
-
-    &.visible {
-        @include opacity(1);
-    }
-
-    &.animating {
-        @include transition(opacity 0.4s ease);
-    }
-}
-
-
-
-//
-// Prev & next buttons
-// ----------------------------------
-.swipster__button--next,
-.swipster__button--prev {
+.swipster__control--next,
+.swipster__control--prev {
     display: block;
     position: absolute;
     top: 50%;
@@ -244,10 +154,10 @@ img {
     background-color: red;
 }
 
-.swipster__button--next {
+.swipster__control--next {
     right: 0;
 }
 
-.swipster__button--prev {
+.swipster__control--prev {
     left: 0;
 }

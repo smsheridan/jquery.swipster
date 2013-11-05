@@ -13,18 +13,25 @@ Swipster = (function() {
         this.counter = (typeof options.counter === 'undefined') ? true : options.counter;
         this.basicMode = (typeof options.basicMode === 'undefined') ? false : options.basicMode;
 
-        this.mainClass = 'swipster';
-        this.innerClass = 'swipster__inner';
-        this.slideClass = 'swipster__slide';
-        this.pageClass = 'swipster__page';
-        this.currentPageClass = 'swipster__page--current';
-        this.nextPageClass = 'swipster__page--next';
-        this.prevPageClass = 'swipster__page--prev';
-        this.controlsClass = 'swipster__controls';
-        this.buttonPrevClass = 'swipster__button--prev';
-        this.buttonNextClass = 'swipster__button--next';
-        this.indicatorsClass = 'swipster__indicators';
-        this.counterClass = 'swipster__counter';
+        this.classes = {
+            main: 'swipster',
+            inner: 'swipster__inner',
+            slide: {
+                main: 'swipster__slide',
+                current: 'swipster__slide--current',
+                next: 'swipster__slide--next',
+                prev: 'swipster__slide--prev'
+            },
+            controls: {
+                main: 'swipster__controls',
+                next: 'swipster__control--next',
+                prev: 'swipster__control--prev'
+            },
+            indicators: 'swipster__indicators',
+            counter: {
+                main: 'swipster__counter'
+            }
+        };
 
         this.init();
     }
@@ -34,7 +41,7 @@ Swipster = (function() {
         this.$element = $(this.element);
 
         // Other variables
-        this.$element.find('.' + this.slideClass).each($.proxy(function(i, element) {
+        this.$element.find('.' + this.classes.slide.main).each($.proxy(function(i, element) {
             this.slides[i] = element;
         }, this));
 
@@ -64,7 +71,7 @@ Swipster = (function() {
      * @TODO: Append all data att the same time, not each part by itself on first init
      */
     Swipster.prototype.createDOM = function() {
-        this.$element.addClass(this.mainClass);
+        this.$element.addClass(this.classes.main);
 
         this._appendSlides();
 
@@ -81,13 +88,13 @@ Swipster = (function() {
         }
 
         // Bind on elements created dynamically
-        this.$inner = this.$element.children('.' + this.innerClass);
-        this.$indicators = this.$element.children('.' + this.indicatorsClass);
-        this.$controls = this.$element.children('.' + this.controlsClass);
-        this.$currentSlide = this.$element.find('.' + this.currentPageClass);
-        this.$prevSlide = this.$element.find('.' + this.prevPageClass);
-        this.$nextSlide = this.$element.find('.' + this.nextPageClass);
-        this.$counterIndex = this.$element.find('.' + this.counterClass + ' .current');
+        this.$inner = this.$element.children('.' + this.classes.inner);
+        this.$indicators = this.$element.children('.' + this.classes.indicators);
+        this.$controls = this.$element.children('.' + this.classes.controls.main);
+        this.$currentSlide = this.$element.find('.' + this.classes.slide.current);
+        this.$prevSlide = this.$element.find('.' + this.classes.slide.prev);
+        this.$nextSlide = this.$element.find('.' + this.classes.slide.next);
+        this.$counterIndex = this.$element.find('.' + this.classes.counter.main + ' .current');
     };
 
     Swipster.prototype._appendSlides = function() {
@@ -95,15 +102,15 @@ Swipster = (function() {
          * Wierd issue with removing elements with this.$inner.html(''), leads
          * to reference errors in IE. Resulting in slides being added as empty.
          */
-        this.$element.find('.' + this.slideClass).each(function() {
+        this.$element.find('.' + this.classes.slide.main).each(function() {
             $(this).remove();
         });
 
         var template = ''
-            + '<div class="' + this.innerClass + '">'
-                + '<div class="' + this.prevPageClass + '">' + this._getSlideHTML(this.slides[this.slides.length - 1]) + '</div>'
-                + '<div class="' + this.currentPageClass + '">' + this._getSlideHTML(this.slides[0]) + '</div>'
-                + '<div class="' + this.nextPageClass + '">' + this._getSlideHTML(this.slides[1]) + '</div>'
+            + '<div class="' + this.classes.inner + '">'
+                + '<div class="' + this.classes.slide.prev + '">' + $(this.slides[this.slides.length - 1]).html() + '</div>'
+                + '<div class="' + this.classes.slide.current + '">' + $(this.slides[0]).html() + '</div>'
+                + '<div class="' + this.classes.slide.next + '">' + $(this.slides[1]).html() + '</div>'
             + '</div>';
 
         /**
@@ -114,7 +121,7 @@ Swipster = (function() {
     };
 
     Swipster.prototype._appendIndicators = function() {
-        var template = '<ol class="' + this.indicatorsClass + '">';
+        var template = '<ol class="' + this.classes.indicators + '">';
 
         for (var i = 0; i < this.slides.length; i++) {
             var classes = (i == 0 ? 'class="active"' : '');
@@ -130,9 +137,9 @@ Swipster = (function() {
 
     Swipster.prototype._appendControls = function() {
         var template = ''
-            + '<div class="' + this.controlsClass + '">'
-            +   '<a href="#next" class="' + this.buttonPrevClass + '"></a>'
-            +   '<a href="#prev" class="' + this.buttonNextClass + '"></a>'
+            + '<div class="' + this.classes.controls.main + '">'
+            +   '<a href="#next" class="' + this.classes.controls.prev + '"></a>'
+            +   '<a href="#prev" class="' + this.classes.controls.next + '"></a>'
             + '</div>'
         
         this.$element.append(template);
@@ -140,12 +147,10 @@ Swipster = (function() {
     
     Swipster.prototype._appendCounter = function() {
         var template = ''
-            + '<div class="' + this.counterClass + '">'
-            +   '<div class="' + this.counterClass + '__wrapper">'
-            +     '<span class="current">' + (this.currentIndex + 1) + '</span>'
-            +     '<span class="divider"></span>'
-            +     '<span class="total">' + this.slides.length + '</span>'
-            +   '</div>'
+            + '<div class="' + this.classes.counter.main + '">'
+            +   '<span class="current">' + (this.currentIndex + 1) + '</span>'
+            +   '<span class="divider">/</span>'
+            +   '<span class="total">' + this.slides.length + '</span>'
             + '</div>'
         
         this.$element.append(template);
@@ -159,7 +164,7 @@ Swipster = (function() {
      * @TODO: Bind on Swipster main wrapper, delegate events
      */
     Swipster.prototype.bindEvents = function() {
-        this.$element.on('click', $.proxy(this._handleClickEvents, this));
+        this.$element.on('click', $.proxy(this._handleClick, this));
         $(document).on('keydown', $.proxy(this._handleKeyDown, this));
 
         this.$inner.on('touchstart', $.proxy(this._onTouchStart, this));
@@ -167,7 +172,7 @@ Swipster = (function() {
         this.$inner.on('touchend', $.proxy(this._onTouchEnd, this));
     };
 
-    Swipster.prototype._handleClickEvents = function(event) {
+    Swipster.prototype._handleClick = function(event) {
         switch (event.type) {
             case 'click':
                 $target = $(event.target);
@@ -177,16 +182,16 @@ Swipster = (function() {
                     event.preventDefault();
                 }
 
-                if ($target.hasClass(this.buttonNextClass)) {
+                if ($target.hasClass(this.classes.controls.next)) {
                     this.next();
                     event.preventDefault();
                 }
 
-                if ($target.hasClass(this.buttonPrevClass)) {
+                if ($target.hasClass(this.classes.controls.prev)) {
                     this.prev();
                     event.preventDefault();
                 }
-                
+
                 break;
         }
     };
@@ -499,7 +504,7 @@ Swipster = (function() {
     };
     
     Swipster.prototype.destroy = function() {
-        this.$element.off('click', this._handleClickEvents);
+        this.$element.off('click', this._handleClick);
         this.$inner.off('touchstart', this._onTouchStart);
         this.$inner.off('touchmove', this._onTouchMove);
         this.$inner.off('touchend', this._onTouchEnd);
