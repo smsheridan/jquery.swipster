@@ -21,6 +21,7 @@ Swipster = (function() {
 
     function Swipster(element, options) {
         this.element = element;
+        this.$element = $(this.element);
         this.slides = [];
 
         if (!this._supports('transition')) {
@@ -51,21 +52,16 @@ Swipster = (function() {
                 total: 'swipster__digit--total'
             }
         };
-
+        
         this.init();
     }
 
     Swipster.prototype = {
         init: function() {
-            // Bind some jQuery stuff
-            this.$element = $(this.element);
-
-            // Other variables
             this.$element.children('.' + this.classes.slide.main).each($.proxy(function(i, element) {
                 this.slides[i] = element;
             }, this));
 
-            // Create touch object
             this.touchObject = {
                 startX: 0,
                 startY: 0,
@@ -76,10 +72,7 @@ Swipster = (function() {
                 initiated: false
             };
 
-            // Create DOM
             this.createDOM();
-
-            // Bind them events
             this.bindEvents();
         },
 
@@ -354,6 +347,7 @@ Swipster = (function() {
          * @TODO: Better touch handling
          * @TODO: Remove commented code
          * @TODO: One event handler for touch
+         * @TODO: Skip this stuff and just enable regular swipe
          */
         _onTouchStart: function(event) {
             if (this.touchObject.initiated) {
