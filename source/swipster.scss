@@ -10,7 +10,6 @@ body {
 }
 
 img {
-    display: block;
     max-width: 100%;
 }
 
@@ -30,7 +29,7 @@ img {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
 
-    @include translate3d(0, 0, 0);
+    @include translateZ(0);
     @include backface-visibility(hidden);
     @include perspective(1000px);
 
@@ -74,6 +73,7 @@ img {
 .swipster__slide--next,
 .swipster__slide--prev,
 .swipster__slide--current {
+    @include translateZ(0);
     @include backface-visibility(hidden);
     @include perspective(1000px);
 }
