@@ -271,17 +271,17 @@ Swipster = (function() {
 
             if (!this.options.basicMode) {
                 if (this.currentIndex < index) {
-                    this._animateToSlideHeight(this.$nextSlide);
                     this._setNextSlideContent(index);
                     this._setIndex(index - 1);
+                    this._animateToSlideHeight(this.$nextSlide);
 
                     this.$inner
                         .addClass('animating animate-forward')
                         .transitionEnd($.proxy(this._nextAnimationEnd, this));
                 } else {
-                    this._animateToSlideHeight(this.$prevSlide);
                     this._setPrevSlideContent(index);
                     this._setIndex(index + 1);
+                    this._animateToSlideHeight(this.$prevSlide);
 
                     this.$inner
                         .addClass('animating animate-back')
