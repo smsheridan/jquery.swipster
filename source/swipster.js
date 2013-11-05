@@ -428,38 +428,34 @@ Swipster = (function() {
          * ====================================================================== */
 
         _renderSlides: function() {
-            /**
-             * It seems as if jQuery is smart. If prev and next is the same jQuery will
-             * see them as the same slide. This means that it will first set the html of
-             * prev slide and then move it to next.
-             *
-             * This will result in a blank prev slide. Cloning the slide is the initial
-             * solution, but it seems to affect performance.
-             *
-             * @TODO: Fix issue with going backwards if there is only two slides.
-             */
+            var current, prev, next;
+
             switch(this.currentIndex) {
                 case this.slides.length - 1:
-                    this.$prevSlide.html(this.slides[this.slides.length - 2]);
-                    this.$currentSlide.html(this.slides[this.slides.length - 1]);
-                    this.$nextSlide.html(this.slides[0]);
+                    prev = $(this.slides[this.slides.length - 2]).html()
+                    current = $(this.slides[this.slides.length - 1]).html()
+                    next = $(this.slides[0]).html();
 
                     break;
 
                 case 0:
-                    this.$prevSlide.html(this.slides[this.slides.length - 1]);
-                    this.$currentSlide.html(this.slides[this.currentIndex]);
-                    this.$nextSlide.html(this.slides[this.currentIndex + 1]);
+                    prev = $(this.slides[this.slides.length - 1]).html()
+                    current = $(this.slides[this.currentIndex]).html()
+                    next = $(this.slides[this.currentIndex + 1]).html();
 
                     break;
 
                 default:
-                    this.$prevSlide.html(this.slides[this.currentIndex - 1]);
-                    this.$currentSlide.html(this.slides[this.currentIndex]);
-                    this.$nextSlide.html(this.slides[this.currentIndex + 1]);
+                    prev = $(this.slides[this.currentIndex - 1]).html()
+                    current = $(this.slides[this.currentIndex]).html()
+                    next = $(this.slides[this.currentIndex + 1]).html();
 
                     break;
             }
+
+            this.$prevSlide.html(prev);
+            this.$currentSlide.html(current);
+            this.$nextSlide.html(next);
         },
 
         _renderIndicators: function() {
