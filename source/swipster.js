@@ -78,19 +78,21 @@ Swipster = (function() {
     Swipster.prototype.createDOM = function() {
         this.$element.addClass(this.classes.main);
 
-        this._appendSlides();
+        var template = this._slideTemplate();
 
         if (this.options.indicators) {
-            this._appendIndicators();
+            template += this._indicatorsTemplate();
         }
 
         if (this.options.controls) {
-            this._appendControls();
+            template += this._controlsTemplate();
         }
         
         if (this.options.counter) {
-            this._appendCounter();
+            template += this._counterTemplate();
         }
+
+        this.$element.append(template);
 
         // Bind on elements created dynamically
         this.$inner = this.$element.children('.' + this.classes.inner);
@@ -102,7 +104,7 @@ Swipster = (function() {
         this.$counterIndex = this.$element.find('.' + this.classes.counter.main + ' .current');
     };
 
-    Swipster.prototype._appendSlides = function() {
+    Swipster.prototype._slideTemplate = function() {
         /**
          * Wierd issue with removing elements with this.$inner.html(''), leads
          * to reference errors in IE. Resulting in slides being added as empty.
@@ -118,14 +120,10 @@ Swipster = (function() {
                 + '<div class="' + this.classes.slide.next + '">' + $(this.slides[1]).html() + '</div>'
             + '</div>';
 
-        /**
-         * Appending the template allows us to add static resources in the html,
-         * like the swipster__fixed stuff.
-         */
-        this.$element.append(template);
+        return template;
     };
 
-    Swipster.prototype._appendIndicators = function() {
+    Swipster.prototype._indicatorsTemplate = function() {
         var template = '<ol class="' + this.classes.indicators + '">';
 
         for (var i = 0; i < this.slides.length; i++) {
@@ -137,20 +135,20 @@ Swipster = (function() {
 
         template += '</ol>';
 
-        this.$element.append(template);
+        return template;
     };
 
-    Swipster.prototype._appendControls = function() {
+    Swipster.prototype._controlsTemplate = function() {
         var template = ''
             + '<div class="' + this.classes.controls.main + '">'
             +   '<a href="#next" class="' + this.classes.controls.prev + '"></a>'
             +   '<a href="#prev" class="' + this.classes.controls.next + '"></a>'
             + '</div>'
         
-        this.$element.append(template);
+        return template;
     };
     
-    Swipster.prototype._appendCounter = function() {
+    Swipster.prototype._counterTemplate = function() {
         var template = ''
             + '<div class="' + this.classes.counter.main + '">'
             +   '<span class="current">' + (this.currentIndex + 1) + '</span>'
@@ -158,7 +156,7 @@ Swipster = (function() {
             +   '<span class="total">' + this.slides.length + '</span>'
             + '</div>'
         
-        this.$element.append(template);
+        return template;
     };
 
     /* ======================================================================
@@ -235,20 +233,18 @@ Swipster = (function() {
      * @TODO: Add check if current slideshow is in viewport
      */
     Swipster.prototype._handleKeyDown = function(event) {
-        if (!this.$inner.hasClass('animating')) {
-            var KEY_RIGHTARROW = 39, KEY_LEFTARROW = 37, KEY_ESC = 27;
-            
-            switch(event.keyCode) {
-                case KEY_RIGHTARROW:
-                    this.next(event);
+        var KEY_RIGHTARROW = 39, KEY_LEFTARROW = 37, KEY_ESC = 27;
+        
+        switch(event.keyCode) {
+            case KEY_RIGHTARROW:
+                this.next(event);
 
-                    break;
+                break;
 
-                case KEY_LEFTARROW:
-                    this.prev(event);
+            case KEY_LEFTARROW:
+                this.prev(event);
 
-                    break;
-            }
+                break;
         }
     };
 
