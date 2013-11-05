@@ -18,7 +18,7 @@ Swipster = (function() {
         this.options = $.extend({}, defaults, options);
         this.currentIndex = this.options.startPosition;
 
-        if (!this.supports('transition')) {
+        if (!this._supports('transition')) {
             this.options.basicMode = true;
         }
 
@@ -38,7 +38,9 @@ Swipster = (function() {
             },
             indicators: 'swipster__indicators',
             counter: {
-                main: 'swipster__counter'
+                main: 'swipster__counter',
+                current: 'swipster__digit--current',
+                total: 'swipster__digit--total'
             }
         };
 
@@ -70,6 +72,19 @@ Swipster = (function() {
 
         // Bind them events
         this.bindEvents();
+    };
+
+    Swipster.prototype.destroy = function() {
+        this.$element.off('click', this._handleClick);
+        this.$inner.off('touchstart', this._onTouchStart);
+        this.$inner.off('touchmove', this._onTouchMove);
+        this.$inner.off('touchend', this._onTouchEnd);
+
+        this.$element.prepend(this.slides);
+        this.$inner.remove();
+        this.$indicators.remove();
+        this.$controls.remove();
+        this.$counter.remove();
     };
 
     /* ======================================================================
@@ -107,12 +122,13 @@ Swipster = (function() {
 
         // Bind on elements created dynamically
         this.$inner = this.$element.children('.' + this.classes.inner);
+        this.$currentSlide = this.$inner.children('.' + this.classes.slide.current);
+        this.$prevSlide = this.$inner.children('.' + this.classes.slide.prev);
+        this.$nextSlide = this.$inner.children('.' + this.classes.slide.next);
+
         this.$indicators = this.$element.children('.' + this.classes.indicators);
         this.$controls = this.$element.children('.' + this.classes.controls.main);
-        this.$currentSlide = this.$element.find('.' + this.classes.slide.current);
-        this.$prevSlide = this.$element.find('.' + this.classes.slide.prev);
-        this.$nextSlide = this.$element.find('.' + this.classes.slide.next);
-        this.$counterIndex = this.$element.find('.' + this.classes.counter.main + ' .current');
+        this.$counter = this.$element.children('.' + this.classes.counter.main);
     };
 
     Swipster.prototype._slideTemplate = function() {
@@ -154,9 +170,9 @@ Swipster = (function() {
     Swipster.prototype._counterTemplate = function() {
         var template = ''
             + '<div class="' + this.classes.counter.main + '">'
-            +     '<span class="current">' + (this.currentIndex + 1) + '</span>'
+            +     '<span class="' + this.classes.counter.current + '">' + (this.currentIndex + 1) + '</span>'
             +     '<span class="divider">/</span>'
-            +     '<span class="total">' + this.slides.length + '</span>'
+            +     '<span class="' + this.classes.counter.total + '">' + this.slides.length + '</span>'
             + '</div>'
         
         return template;
@@ -413,48 +429,6 @@ Swipster = (function() {
         this._renderCounter();
     };
 
-    /**
-     * https://gist.github.com/jackfuchs/556448
-     * To verify that a CSS property is supported (or any of its browser-specific implementations)
-     *
-     * @param string p - css property name
-     * [@param] bool rp - optional, if set to true, the css property name will be returned, instead of a boolean support indicator
-     *
-     * @Author: Axel Jack Fuchs (Cologne, Germany)
-     * @Date: 08-29-2010 18:43
-     *
-     * Example: $.support.cssProperty('boxShadow');
-     * Returns: true
-     *
-     * Example: $.support.cssProperty('boxShadow', true);
-     * Returns: 'MozBoxShadow' (On Firefox4 beta4)
-     * Returns: 'WebkitBoxShadow' (On Safari 5)
-     */
-    Swipster.prototype.supports = function(p, rp) {
-        var b = document.body || document.documentElement,
-        s = b.style;
-     
-        // No css support detected
-        if (typeof s == 'undefined') {
-            return false;
-        }
-     
-        // Tests for standard prop
-        if (typeof s[p] == 'string') {
-            return rp ? p : true;
-        }
-     
-        // Tests for vendor specific prop
-        v = ['Moz', 'Webkit', 'Khtml', 'O', 'ms', 'Icab'],
-        p = p.charAt(0).toUpperCase() + p.substr(1);
-
-        for(var i = 0; i < v.length; i++) {
-            if (typeof s[v[i] + p] == 'string') {
-                return rp ? (v[i] + p) : true;
-            }
-        }
-    };
-
     /* ======================================================================
      * Some render functions
      * ====================================================================== */
@@ -500,7 +474,7 @@ Swipster = (function() {
     };
 
     Swipster.prototype._renderCounter = function() {
-        this.$counterIndex.text(this.currentIndex + 1);
+        this.$counter.children('.' + this.classes.counter.current).text(this.currentIndex + 1);
     };
 
     Swipster.prototype._renderNextSlide = function() {
@@ -554,17 +528,47 @@ Swipster = (function() {
     Swipster.prototype._getSlideHTML = function(element) {
         return $('<p />').append(element).html();
     };
-    
-    Swipster.prototype.destroy = function() {
-        this.$element.off('click', this._handleClick);
-        this.$inner.off('touchstart', this._onTouchStart);
-        this.$inner.off('touchmove', this._onTouchMove);
-        this.$inner.off('touchend', this._onTouchEnd);
 
-        this.$element.prepend(this.slides);
-        this.$inner.remove();
-        this.$indicators.remove();
-        this.$controls.remove();
+    /**
+     * https://gist.github.com/jackfuchs/556448
+     * To verify that a CSS property is supported (or any of its browser-specific implementations)
+     *
+     * @param string p - css property name
+     * [@param] bool rp - optional, if set to true, the css property name will be returned, instead of a boolean support indicator
+     *
+     * @Author: Axel Jack Fuchs (Cologne, Germany)
+     * @Date: 08-29-2010 18:43
+     *
+     * Example: $.support.cssProperty('boxShadow');
+     * Returns: true
+     *
+     * Example: $.support.cssProperty('boxShadow', true);
+     * Returns: 'MozBoxShadow' (On Firefox4 beta4)
+     * Returns: 'WebkitBoxShadow' (On Safari 5)
+     */
+    Swipster.prototype._supports = function(p, rp) {
+        var b = document.body || document.documentElement,
+        s = b.style;
+     
+        // No css support detected
+        if (typeof s == 'undefined') {
+            return false;
+        }
+     
+        // Tests for standard prop
+        if (typeof s[p] == 'string') {
+            return rp ? p : true;
+        }
+     
+        // Tests for vendor specific prop
+        v = ['Moz', 'Webkit', 'Khtml', 'O', 'ms', 'Icab'],
+        p = p.charAt(0).toUpperCase() + p.substr(1);
+
+        for(var i = 0; i < v.length; i++) {
+            if (typeof s[v[i] + p] == 'string') {
+                return rp ? (v[i] + p) : true;
+            }
+        }
     };
 
     return Swipster;
