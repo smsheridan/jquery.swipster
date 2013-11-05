@@ -71,7 +71,7 @@ Swipster = (function() {
     /* ======================================================================
      * Initial DOM manipulation and template structure
      * ====================================================================== */
-    
+
     Swipster.prototype.createDOM = function() {
         var template = this._slideTemplate();
 
@@ -87,7 +87,19 @@ Swipster = (function() {
             template += this._counterTemplate();
         }
 
-        this.$element.addClass(this.classes.main).append(template);
+        /**
+         * Wierd issue with removing elements with this.$inner.html(''), leads
+         * to reference errors in IE. Resulting in slides being added as empty.
+         *
+         * This statement first finds all the available slides, then it
+         * removes them. Afterwards it adds classes and templates.
+         */
+        this.$element
+            .children('.' + this.classes.slide.main)
+            .remove()
+            .end()
+            .addClass(this.classes.main)
+            .append(template);
 
         // Bind on elements created dynamically
         this.$inner = this.$element.children('.' + this.classes.inner);
@@ -100,12 +112,8 @@ Swipster = (function() {
     };
 
     Swipster.prototype._slideTemplate = function() {
-        /**
-         * Wierd issue with removing elements with this.$inner.html(''), leads
-         * to reference errors in IE. Resulting in slides being added as empty.
-         */
-        this.$element.find('.' + this.classes.slide.main).remove();
 
+        
         var template = ''
             + '<div class="' + this.classes.inner + '">'
             +     '<div class="' + this.classes.slide.prev + '">' + $(this.slides[this.slides.length - 1]).html() + '</div>'
