@@ -226,16 +226,19 @@ Swipster = (function() {
          * @TODO: Add check if current slideshow is in viewport
          */
         _handleKeyDown: function(event) {
-            var KEY_RIGHTARROW = 39, KEY_LEFTARROW = 37, KEY_ESC = 27;
+            var KEY_RIGHTARROW = 39
+              , KEY_LEFTARROW = 37;
             
             switch(event.keyCode) {
                 case KEY_RIGHTARROW:
-                    this.next(event);
+                    this.next();
+                    event.preventDefault();
 
                     break;
 
                 case KEY_LEFTARROW:
-                    this.prev(event);
+                    this.prev();
+                    event.preventDefault();
 
                     break;
             }
