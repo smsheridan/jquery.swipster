@@ -34,7 +34,7 @@ img {
     @include perspective(1000px);
 
     %animate {
-        @include transition(all 0.5s ease);
+        @include transition(transform 0.5s ease-in-out, height 0.5s ease-in-out);
     }
 
     .animate-back {
