@@ -3,14 +3,6 @@
 var Swipster;
 
 Swipster = (function() {
-    ;(function($, window, document, undefined) {
-        $.fn.redraw = function() {
-            return $(this).each(function() {
-                var redraw = this.offsetHeight;
-            });
-        };
-    })(jQuery, window, document);
-
     var defaults = {
         startPosition: 0,
         indicators: true,
@@ -266,7 +258,6 @@ Swipster = (function() {
                 if (this.currentIndex < index) {
                     this._setNextSlideContent(index);
                     this._setIndex(index - 1);
-                    this._animateToSlideHeight(this.$nextSlide);
 
                     this.$inner
                         .addClass('animating animate-forward')
@@ -274,7 +265,6 @@ Swipster = (function() {
                 } else {
                     this._setPrevSlideContent(index);
                     this._setIndex(index + 1);
-                    this._animateToSlideHeight(this.$prevSlide);
 
                     this.$inner
                         .addClass('animating animate-back')
@@ -292,8 +282,6 @@ Swipster = (function() {
         next: function() {
             if (!this.$inner.hasClass('animating')) {
                 if (!this.options.basicMode) {
-                    this._animateToSlideHeight(this.$nextSlide);
-
                     this.$inner
                         .addClass('animating animate-forward')
                         .transitionEnd($.proxy(this._nextAnimationEnd, this));
@@ -304,11 +292,7 @@ Swipster = (function() {
         },
 
         _nextAnimationEnd: function(event) {
-            this.$inner
-                .removeClass('animating animate-forward')
-                .redraw()
-                .attr('style', '');
-
+            this.$inner.removeClass('animating animate-forward');
             this._renderNextSlide();
         },
 
@@ -319,8 +303,6 @@ Swipster = (function() {
         prev: function() {
             if (!this.$inner.hasClass('animating')) {
                 if (!this.options.basicMode) {
-                    this._animateToSlideHeight(this.$prevSlide);
-
                     this.$inner
                         .addClass('animating animate-back')
                         .transitionEnd($.proxy(this._prevAnimationEnd, this));
@@ -331,11 +313,7 @@ Swipster = (function() {
         },
 
         _prevAnimationEnd: function(event) {
-            this.$inner
-                .removeClass('animating animate-back')
-                .redraw()
-                .attr('style', '');
-
+            this.$inner.removeClass('animating animate-back');
             this._renderPrevSlide();
         },
 
@@ -517,13 +495,6 @@ Swipster = (function() {
             if (this.currentIndex >= this.slides.length) {
                 this.currentIndex = 0;
             }
-        },
-
-        _animateToSlideHeight: function($slide) {
-            var elementHeight = this.$element.outerHeight(true);
-            var slideHeight = $slide.children().first().outerHeight(true);
-
-            this.$inner.css('height', elementHeight).redraw().css('height', slideHeight);
         },
 
         _decrementIndex: function() {
