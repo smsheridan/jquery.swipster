@@ -64,8 +64,6 @@ Swipster = (function() {
                 next: 1
             };
 
-            console.log(this.index);
-
             this.touchObject = {
                 startX: 0,
                 startY: 0,
@@ -303,8 +301,6 @@ Swipster = (function() {
                     this._setNextSlideContent(index);
                     this._setIndex(index - 1);
 
-                    console.log('Next: ' + (index - 1));
-
                     this.$inner
                         .addClass('animating animate-forward')
                         .transitionEnd($.proxy(this._nextAnimationEnd, this));
@@ -314,8 +310,6 @@ Swipster = (function() {
                     if (index == (this.slides.length - 1)) {
                         prevIndex = 0
                     }
-
-                    console.log('Prev: ' + (index + 1));
 
                     this._setPrevSlideContent(prevIndex);
                     this._setIndex(index + 1);
@@ -631,8 +625,6 @@ Swipster = (function() {
                 current: current,
                 next: next
             }
-
-            console.log(this.index);
         },
 
         _setNextSlideContent: function(index) {
