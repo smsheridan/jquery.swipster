@@ -17,6 +17,7 @@ Swipster = (function() {
         this.$element = $(this.element);
         this.slides = [];
         this.thread = null;
+        this.index = {};
 
         this.options = $.extend({}, defaults, options);
 
@@ -56,6 +57,12 @@ Swipster = (function() {
             this.$element.children('.' + this.classes.slide.main).each($.proxy(function(i, element) {
                 this.slides[i] = element;
             }, this));
+
+            this.index = {
+                current: 0,
+                prev: this.slides.length - 1,
+                next: 1
+            };
 
             this.touchObject = {
                 startX: 0,
@@ -300,7 +307,7 @@ Swipster = (function() {
                 } else {
                     var prevIndex = index;
 
-                    if (this.currentIndex == this.slides.length - 1) {
+                    if (index == (this.slides.length - 1)) {
                         prevIndex = 0
                     }
 
@@ -382,7 +389,7 @@ Swipster = (function() {
          * @TODO: Better touch handling
          * @TODO: Remove commented code
          * @TODO: One event handler for touch
-         * @TODO: Skip this stuff and just enable regular swipe
+         * @TODO: Skip this stuff and just enable regular swipe if there are only two slides
          */
         _onTouchStart: function(event) {
             if (this.touchObject.initiated) {
@@ -484,6 +491,9 @@ Swipster = (function() {
          * Some render functions
          * ====================================================================== */
 
+        /**
+         * @TODO: Optimize this
+         */
         _renderSlides: function() {
             /*var current, prev, next;
 
@@ -592,7 +602,6 @@ Swipster = (function() {
         },
 
         _setNextSlideContent: function(index) {
-            //this.$nextSlide.html(this._getSlideHTML(this.slides[index]));
             var nextIndex = this.currentIndex - this.slides.length + 1;
 
             this.$inner.children().eq(nextIndex).removeClass(this.classes.slide.next).addClass(this.classes.slide.main);
@@ -600,15 +609,10 @@ Swipster = (function() {
         },
 
         _setPrevSlideContent: function(index) {
-            //this.$prevSlide.html(this._getSlideHTML(this.slides[index]));
             var prevIndex = this.currentIndex - 1;
 
             this.$inner.children().eq(prevIndex).removeClass(this.classes.slide.prev).addClass(this.classes.slide.main);
             this.$inner.children().eq(index).removeClass(this.classes.slide.main + ' ' + this.classes.slide.next).addClass(this.classes.slide.prev);
-        },
-
-        _getSlideHTML: function(element) {
-            return $('<p />').append(element).html();
         },
 
         /**
