@@ -495,35 +495,6 @@ Swipster = (function() {
          * @TODO: Optimize this
          */
         _renderSlides: function() {
-            /*var current, prev, next;
-
-            switch(this.currentIndex) {
-                case this.slides.length - 1:
-                    prev = $(this.slides[this.slides.length - 2]).html()
-                    current = $(this.slides[this.slides.length - 1]).html()
-                    next = $(this.slides[0]).html();
-
-                    break;
-
-                case 0:
-                    prev = $(this.slides[this.slides.length - 1]).html()
-                    current = $(this.slides[this.currentIndex]).html()
-                    next = $(this.slides[this.currentIndex + 1]).html();
-
-                    break;
-
-                default:
-                    prev = $(this.slides[this.currentIndex - 1]).html()
-                    current = $(this.slides[this.currentIndex]).html()
-                    next = $(this.slides[this.currentIndex + 1]).html();
-
-                    break;
-            }
-
-            this.$prevSlide.html(prev);
-            this.$currentSlide.html(current);
-            this.$nextSlide.html(next);*/
-
             var self = this;
 
             this.$inner.children().each(function(index, value) {
@@ -578,27 +549,13 @@ Swipster = (function() {
 
         _incrementIndex: function() {
             this._setIndex(this.index.current + 1);
-            /*this.currentIndex++;
-
-            if (this.currentIndex >= this.slides.length) {
-                this.currentIndex = 0;
-            }*/
         },
 
         _decrementIndex: function() {
             this._setIndex(this.index.current - 1);
-            /*this.currentIndex--;
-
-            if (this.currentIndex < 0) {
-                this.currentIndex = this.slides.length - 1;
-            }*/
         },
 
         _setIndex: function(index) {
-            /*if (index >= 0 && index < this.slides.length) {
-                this.currentIndex = index;
-            }*/
-
             var current = index;
 
             if (current > this.slides.length - 1) {
