@@ -178,15 +178,13 @@ Swipster = (function() {
             var template = '<ol class="' + this.classes.indicators + '">';
 
             for (var i = 0; i < this.numberOfSlides; i++) {
-                var classes = (i == 0 ? 'class="active"' : '');
-                var index = i + 1;
+                var classes = (i == this._index.current ? 'class="active"' : '')
+                  , index = i + 1;
 
                 template += '<li ' + classes + ' data-goto-slide="' + index + '"></li>';
             }
 
-            template += '</ol>';
-
-            return template;
+            return template + '</ol>';
         },
 
         _controlsTemplate: function() {
