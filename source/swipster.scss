@@ -13,6 +13,10 @@ img {
     max-width: 100%;
 }
 
+p {
+    text-align: center;
+}
+
 /* ======================================================================
  * Main styling
  * ====================================================================== */
@@ -60,14 +64,11 @@ img {
 
 .swipster__slide {
     display: none;
-
-    &:first-child {
+    
+    // @TODO: Fix this with some cool loading stuff
+    /*&:first-child {
         display: block;
-    }
-
-    .loaded & {
-        display: block;
-    }
+    }*/
 }
 
 .swipster__slide--next,
