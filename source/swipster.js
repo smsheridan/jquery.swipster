@@ -16,16 +16,23 @@ Swipster = (function() {
         this.element = element;
         this.$element = $(this.element);
         this.slides = [];
-        this.thread = null;
-        this.index = {};
+        this._thread = null;
+
+        /**
+         * The index object should be considered immutable, only
+         * change the properties of the object through following methods:
+         *
+         * _setIndex()
+         * _incrementIndex()
+         * _decrementIndex()
+         */
+        this._index = {};
 
         this.options = $.extend({}, defaults, options);
 
         if (!this._supports('transition')) {
             this.options.basicMode = true;
         }
-        
-        //this.currentIndex = this.options.startPosition;
 
         this.classes = {
             main: 'swipster',
@@ -58,11 +65,7 @@ Swipster = (function() {
                 this.slides[i] = element;
             }, this));
 
-            this.index = {
-                prev: this.slides.length - 1,
-                current: 0,
-                next: 1
-            };
+            this._setIndex(this.options.startPosition);
 
             this.touchObject = {
                 startX: 0,
@@ -92,13 +95,13 @@ Swipster = (function() {
         },
 
         start: function() {
-            this.thread = setInterval($.proxy(function() {
+            this._thread = setInterval($.proxy(function() {
                 this.next();
             }, this), this.options.interval);
         },
 
         stop: function() {
-            clearInterval(this.thread);
+            clearInterval(this._thread);
         },
 
         /* ======================================================================
@@ -206,7 +209,7 @@ Swipster = (function() {
         _counterTemplate: function() {
             var template = ''
                 + '<div class="' + this.classes.counter.main + '">'
-                +     '<span class="' + this.classes.counter.current + '">' + (this.index.current + 1) + '</span>'
+                +     '<span class="' + this.classes.counter.current + '">' + (this._index.current + 1) + '</span>'
                 +     '<span class="divider">/</span>'
                 +     '<span class="' + this.classes.counter.total + '">' + this.slides.length + '</span>'
                 + '</div>'
@@ -237,7 +240,7 @@ Swipster = (function() {
 
                     if ($target.parent().hasClass(this.classes.indicators)) {
                         if (!$target.hasClass('active')) {
-                            this.animateToSlide($target.data('goto-slide'));
+                            this.gotoSlide($target.data('goto-slide') - 1);
                         }
                         
                         event.preventDefault();
@@ -283,13 +286,74 @@ Swipster = (function() {
          * ====================================================================== */
 
         gotoSlide: function(index) {
+            if (this.$inner.hasClass('animating')) {
+                return false;
+            }
+
+            if (this.options.basicMode) {
+                this._gotoNoAnimation(index);
+            } else {
+                this._gotoWithAnimation(index);
+            }
+        },
+
+        _gotoNoAnimation: function(index) {
             this._setIndex(index)
             this._renderSlides();
             this._renderIndicators();
             this._renderCounter();
         },
 
-        animateToSlide: function(index) {
+        _gotoWithAnimation: function (index) {
+            if (this._index.current < index) {
+                console.log('Go forward');
+                this._setIndex(index);
+                this._doForwardAnimation();
+            } else {
+                console.log('Go backward');
+                this._setIndex(index);
+                this._doBackAnimation();
+            }
+        },
+
+        _doForwardAnimation: function() {
+            // Some wierdness, but validate that the next item is the correct item
+            console.log(this.$inner.children().eq(this._index.current));
+
+            if (!this.$inner.children().eq(this._index.current).hasClass(this.classes.slide.next)) {
+                console.log('Wrong class stuff');
+                this.$inner.children('.' + this.classes.slide.next).removeClass(this.classes.slide.next).addClass(this.classes.slide.main);
+                this.$inner.children().eq(this._index.current).removeClass(this.classes.slide.main + ' ' + this.classes.slide.prev).addClass(this.classes.slide.next);
+            }
+
+            this.$inner
+                .addClass('animating animate-forward')
+                .transitionEnd($.proxy(this._animationEnd, this));
+        },
+
+        _doBackAnimation: function() {
+            // Some wierdness, but validate that the next item is the correct item
+            console.log(this.$inner.children().eq(this._index.current));
+
+            if (!this.$inner.children().eq(this._index.current).hasClass(this.classes.slide.prev)) {
+                console.log('Wrong class stuff');
+                this.$inner.children('.' + this.classes.slide.prev).removeClass(this.classes.slide.prev).addClass(this.classes.slide.main);
+                this.$inner.children().eq(this._index.current).removeClass(this.classes.slide.main + ' ' + this.classes.slide.prev + ' ' + this.classes.slide.next).addClass(this.classes.slide.prev);
+            }
+
+            this.$inner
+                .addClass('animating animate-back')
+                .transitionEnd($.proxy(this._animationEnd, this));
+        },
+
+        _animationEnd: function(event) {
+            this.$inner.removeClass('animating animate-forward animate-back');
+            this._renderSlides();
+            this._renderIndicators();
+            this._renderCounter();
+        },
+
+        /*animateToSlide: function(index) {
             if (this.$inner.hasClass('animating')) {
                 return false;
             }
@@ -297,7 +361,7 @@ Swipster = (function() {
             index = index - 1;
 
             if (!this.options.basicMode) {
-                if (this.index.current < index) {
+                if (this._index.current < index) {
                     this._setNextSlideContent(index);
                     this._setIndex(index - 1);
 
@@ -321,17 +385,17 @@ Swipster = (function() {
             } else {
                 this.gotoSlide(index);
             }
-        },
+        },*/
 
         /* ======================================================================
          * Public next() Method, slides to next slide
          * ====================================================================== */
 
         next: function() {
-            if (!this.$inner.hasClass('animating')) {
+            /*if (!this.$inner.hasClass('animating')) {
                 if (!this.options.basicMode) {
                     if (this.slides.length < 3) {
-                        if (this.index.current == 0) {
+                        if (this._index.current == 0) {
                             this.$inner.children().eq(1).removeClass(this.classes.slide.prev + ' ' + this.classes.slide.main).addClass(this.classes.slide.next);
                         } else {
                             this.$inner.children().eq(0).removeClass(this.classes.slide.prev + ' ' + this.classes.slide.main).addClass(this.classes.slide.next);
@@ -344,23 +408,24 @@ Swipster = (function() {
                 } else {
                     this._renderNextSlide();
                 }
-            }
+            }*/
+            this.gotoSlide(this._index.current + 1);
         },
 
-        _nextAnimationEnd: function(event) {
+        /*_nextAnimationEnd: function(event) {
             this.$inner.removeClass('animating animate-forward');
             this._renderNextSlide();
-        },
+        },*/
 
         /* ======================================================================
          * Public prev() Method, slides to previous slide
          * ====================================================================== */
 
         prev: function() {
-            if (!this.$inner.hasClass('animating')) {
+            /*if (!this.$inner.hasClass('animating')) {
                 if (!this.options.basicMode) {
                     if (this.slides.length < 3) {
-                        if (this.index.current == 0) {
+                        if (this._index.current == 0) {
                             this.$inner.children().eq(1).removeClass(this.classes.slide.next + ' ' + this.classes.slide.main).addClass(this.classes.slide.prev);
                         } else {
                             this.$inner.children().eq(0).removeClass(this.classes.slide.next + ' ' + this.classes.slide.main).addClass(this.classes.slide.prev);
@@ -373,13 +438,14 @@ Swipster = (function() {
                 } else {
                     this._renderPrevSlide();
                 }
-            }
+            }*/
+            this.gotoSlide(this._index.current - 1);
         },
 
-        _prevAnimationEnd: function(event) {
+        /*_prevAnimationEnd: function(event) {
             this.$inner.removeClass('animating animate-back');
             this._renderPrevSlide();
-        },
+        },*/
 
         /* ======================================================================
          * Touch Handlers & Animations
@@ -506,11 +572,11 @@ Swipster = (function() {
                 );
             });
 
-            this.$inner.children().eq(this.index.current).addClass(this.classes.slide.current);
+            this.$inner.children().eq(this._index.current).addClass(this.classes.slide.current);
 
-            if (this.index.prev != this.index.next) {
-                this.$inner.children().eq(this.index.next).addClass(this.classes.slide.next);
-                this.$inner.children().eq(this.index.prev).addClass(this.classes.slide.prev);
+            if (this._index.prev != this._index.next) {
+                this.$inner.children().eq(this._index.next).addClass(this.classes.slide.next);
+                this.$inner.children().eq(this._index.prev).addClass(this.classes.slide.prev);
             }
 
             this.$inner.children().each(function(index, value) {
@@ -522,14 +588,14 @@ Swipster = (function() {
 
         _renderIndicators: function() {
             this.$indicators.find('.active').removeClass('active');
-            this.$indicators.find('[data-goto-slide=' + (this.index.current + 1) + ']').addClass('active');
+            this.$indicators.find('[data-goto-slide=' + (this._index.current + 1) + ']').addClass('active');
         },
 
         _renderCounter: function() {
-            this.$counter.children('.' + this.classes.counter.current).text(this.index.current + 1);
+            this.$counter.children('.' + this.classes.counter.current).text(this._index.current + 1);
         },
 
-        _renderNextSlide: function() {
+        /*_renderNextSlide: function() {
             this._incrementIndex();
             this._renderSlides();
             this._renderIndicators();
@@ -541,18 +607,18 @@ Swipster = (function() {
             this._renderSlides();
             this._renderIndicators();
             this._renderCounter();
-        },
+        },*/
 
         /* ======================================================================
          * Some nice helpers
          * ====================================================================== */
 
         _incrementIndex: function() {
-            this._setIndex(this.index.current + 1);
+            this._setIndex(this._index.current + 1);
         },
 
         _decrementIndex: function() {
-            this._setIndex(this.index.current - 1);
+            this._setIndex(this._index.current - 1);
         },
 
         _setIndex: function(index) {
@@ -577,26 +643,26 @@ Swipster = (function() {
                 next = 0;
             }
 
-            this.index = {
+            this._index = {
                 prev: prev,
                 current: current,
                 next: next
             }
         },
 
-        _setNextSlideContent: function(index) {
-            var nextIndex = this.index.current - this.slides.length + 1;
+        /*_setNextSlideContent: function(index) {
+            var nextIndex = this._index.current - this.slides.length + 1;
 
             this.$inner.children().eq(nextIndex).removeClass(this.classes.slide.next).addClass(this.classes.slide.main);
             this.$inner.children().eq(index).removeClass(this.classes.slide.main).addClass(this.classes.slide.next);
         },
 
         _setPrevSlideContent: function(index) {
-            var prevIndex = this.index.current - 1;
+            var prevIndex = this._index.current - 1;
 
             this.$inner.children().eq(prevIndex).removeClass(this.classes.slide.prev).addClass(this.classes.slide.main);
             this.$inner.children().eq(index).removeClass(this.classes.slide.main + ' ' + this.classes.slide.next).addClass(this.classes.slide.prev);
-        },
+        },*/
 
         /**
          * https://gist.github.com/jackfuchs/556448
