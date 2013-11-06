@@ -308,10 +308,10 @@ Swipster = (function() {
         },
 
         _gotoWithAnimation: function (index) {
-            var animationDirection
+            var slideClass
+              , animationClass
               , $upcommingSlide
               , $wrongUpcommingSlide
-
               , classesToRemove = [
                     this.classes.slide.main,
                     this.classes.slide.prev,
@@ -319,40 +319,29 @@ Swipster = (function() {
                 ].join(' ');
 
             if (this._index.current < index) {
-                this._setIndex(index);
-
-                animationDirection = 'animate-forward';
-                $upcommingSlide = this.$inner.children().eq(this._index.current);
-                $wrongUpcommingSlide = this.$inner.children('.' + this.classes.slide.next);
-
-                if (!$upcommingSlide.hasClass(this.classes.slide.next)) {
-                    $wrongUpcommingSlide
-                        .removeClass(this.classes.slide.next)
-                        .addClass(this.classes.slide.main);
-
-                    $upcommingSlide
-                        .removeClass(classesToRemove)
-                        .addClass(this.classes.slide.next);
-                }
+                animationClass = 'animate-forward';
+                slideClass = this.classes.slide.next;
             } else {
-                this._setIndex(index);
-
-                animationDirection = 'animate-back';
-                $upcommingSlide = this.$inner.children().eq(this._index.current);
-                $wrongUpcommingSlide = this.$inner.children('.' + this.classes.slide.prev);
-
-                if (!$upcommingSlide.hasClass(this.classes.slide.prev)) {
-                    $wrongUpcommingSlide
-                        .removeClass(this.classes.slide.prev)
-                        .addClass(this.classes.slide.main);
-
-                    $upcommingSlide
-                        .removeClass(classesToRemove)
-                        .addClass(this.classes.slide.prev);
-                }
+                animationClass = 'animate-back';
+                slideClass = this.classes.slide.prev;
             }
 
-            this.$inner.addClass('animating ' + animationDirection).transitionEnd($.proxy(this._animationEnd, this));
+            this._setIndex(index);
+
+            $upcommingSlide = this.$inner.children().eq(this._index.current);
+            $wrongUpcommingSlide = this.$inner.children('.' + slideClass);
+
+            if (!$upcommingSlide.hasClass(slideClass)) {
+                $wrongUpcommingSlide
+                    .removeClass(slideClass)
+                    .addClass(this.classes.slide.main);
+
+                $upcommingSlide
+                    .removeClass(classesToRemove)
+                    .addClass(slideClass);
+            }
+
+            this.$inner.addClass('animating ' + animationClass).transitionEnd($.proxy(this._animationEnd, this));
         },
 
         _animationEnd: function(event) {
