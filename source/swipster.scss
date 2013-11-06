@@ -41,12 +41,12 @@ p {
         @include transition(transform 0.5s ease-in-out);
     }
 
-    .animate-back {
+    .animate-to-prev {
         @extend %animate;
         @include transform(translate(100%, 0) translateZ(0));
     }
 
-    .animate-forward {
+    .animate-to-next {
         @extend %animate;
         @include transform(translate(-100%, 0) translateZ(0));
     }

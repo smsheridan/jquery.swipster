@@ -294,10 +294,10 @@ Swipster = (function() {
             ].join(' ');
 
             if (this._index.current < index) {
-                animationClass = 'animate-forward';
+                animationClass = 'animate-to-next';
                 slideClass = this.classes.slide.next;
             } else {
-                animationClass = 'animate-back';
+                animationClass = 'animate-to-prev';
                 slideClass = this.classes.slide.prev;
             }
 
@@ -320,7 +320,7 @@ Swipster = (function() {
         },
 
         _animationEnd: function(event) {
-            this.$inner.removeClass('animating animate-forward animate-back');
+            this.$inner.removeClass('animating animate-to-next animate-to-prev');
             this._renderSlides();
             this._renderIndicators();
             this._renderCounter();
