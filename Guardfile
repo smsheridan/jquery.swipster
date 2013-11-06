@@ -6,6 +6,11 @@ guard 'sprockets', :destination => 'build', :asset_paths => ['scripts'], :minify
   watch %r{source/(.+)\.js}
 end
 
+# JS Hint
+guard 'jshint-node', :config => 'jshint-config.json' do
+    watch %r{source/(.+)\.js}
+end
+
 # Live reload
 guard 'livereload', :apply_js_live => true, :apply_css_live => true do
   watch(%r{build/(.+)\.css})
