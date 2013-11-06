@@ -16,6 +16,8 @@ Swipster = (function() {
         this.element = element;
         this.$element = $(this.element);
         this.slides = [];
+        this.numberOfSlides = 0;
+        this._maxSlide = 0;
 
         /**
          * This object is only for internal tracking of the autoplay
@@ -63,11 +65,13 @@ Swipster = (function() {
 
     Swipster.prototype = {
         init: function() {
-            this.$element.children('.' + this.classes.slide.main).each($.proxy(function(i, element) {
-                this.slides[i] = element;
+            this.$element.children().each($.proxy(function(i, v) {
+                this.slides[i] = v;
             }, this));
 
             this._setIndex(this.options.startPosition);
+            this.numberOfSlides = this.slides.length;
+            this._maxSlide = this.numberOfSlides - 1;
 
             this.touchObject = {
                 startX: 0,
@@ -149,18 +153,18 @@ Swipster = (function() {
         _slideTemplate: function() {
             var template = '<div class="' + this.classes.inner + '">';
 
-            for (var i = 0; i < this.slides.length; i++) {
+            for (var i = 0; i < this.numberOfSlides; i++) {
                 var slideClass = this.classes.slide.main;
 
                 if (i == 0) {
                     slideClass = this.classes.slide.current;
                 }
 
-                if (i == 1 && i != (this.slides.length - 1)) {
+                if (i == 1 && i != (this._maxSlide)) {
                     slideClass = this.classes.slide.next;
                 }
 
-                if (i == (this.slides.length - 1) && i != 1) {
+                if (i == (this._maxSlide) && i != 1) {
                     slideClass = this.classes.slide.prev;
                 }
 
@@ -175,7 +179,7 @@ Swipster = (function() {
         _indicatorsTemplate: function() {
             var template = '<ol class="' + this.classes.indicators + '">';
 
-            for (var i = 0; i < this.slides.length; i++) {
+            for (var i = 0; i < this.numberOfSlides; i++) {
                 var classes = (i == 0 ? 'class="active"' : '');
                 var index = i + 1;
 
@@ -202,7 +206,7 @@ Swipster = (function() {
                 + '<div class="' + this.classes.counter.main + '">'
                 +     '<span class="' + this.classes.counter.current + '">' + (this._index.current + 1) + '</span>'
                 +     '<span class="divider">/</span>'
-                +     '<span class="' + this.classes.counter.total + '">' + this.slides.length + '</span>'
+                +     '<span class="' + this.classes.counter.total + '">' + this.numberOfSlides + '</span>'
                 + '</div>'
             
             return template;
@@ -499,22 +503,20 @@ Swipster = (function() {
         _setIndex: function(index) {
             var current = index;
 
-            if (current > this.slides.length - 1) {
+            if (current > this._maxSlide) {
                 current = 0;
-            }
-
-            if (current < 0) {
-                current = this.slides.length - 1;
+            } else if (current < 0) {
+                current = this._maxSlide;
             }
 
             var prev = current - 1;
             var next = current + 1;
 
             if (prev < 0) {
-                prev = this.slides.length - 1;
+                prev = this._maxSlide;
             }
 
-            if (next > this.slides.length - 1) {
+            if (next > this._maxSlide) {
                 next = 0;
             }
 
