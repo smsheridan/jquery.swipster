@@ -428,9 +428,15 @@ Swipster = (function() {
             
             if (this.touchObject.stepsX >= 50) {
                 if (this.touchObject.currentX < 0) {
-                    this._renderNextSlide();
+                    this._incrementIndex();
+                    this._renderSlides();
+                    this._renderIndicators();
+                    this._renderCounter();
                 } else {
-                    this._renderPrevSlide();
+                    this._decrementIndex();
+                    this._renderSlides();
+                    this._renderIndicators();
+                    this._renderCounter();
                 }
             }
         },
