@@ -217,7 +217,6 @@ Swipster = (function() {
          */
         bindEvents: function() {
             this.$element.on('click', $.proxy(this._handleClick, this));
-            $(document).on('keydown', $.proxy(this._handleKeyDown, this));
 
             this.$inner.on('touchstart', $.proxy(this._onTouchStart, this));
             this.$inner.on('touchmove', $.proxy(this._onTouchMove, this));
@@ -246,27 +245,6 @@ Swipster = (function() {
                         this.prev();
                         event.preventDefault();
                     }
-
-                    break;
-            }
-        },
-
-        /**
-         * @TODO: Add check if current slideshow is in viewport
-         */
-        _handleKeyDown: function(event) {
-            var KEY_RIGHTARROW = 39 , KEY_LEFTARROW = 37;
-            
-            switch(event.keyCode) {
-                case KEY_RIGHTARROW:
-                    this.next();
-                    event.preventDefault();
-
-                    break;
-
-                case KEY_LEFTARROW:
-                    this.prev();
-                    event.preventDefault();
 
                     break;
             }
@@ -586,5 +564,3 @@ Swipster = (function() {
 
     return Swipster;    
 })();
-
-
