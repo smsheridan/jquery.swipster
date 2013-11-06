@@ -502,8 +502,9 @@ Swipster = (function() {
         },
 
         _renderIndicators: function() {
-            this.$indicators.find('.active').removeClass('active');
-            this.$indicators.find('[data-goto-slide=' + (this._index.current + 1) + ']').addClass('active');
+            this.$indicators
+                .children('.active').removeClass('active')
+                .children('[data-goto-slide=' + (this._index.current + 1) + ']').addClass('active');
         },
 
         _renderCounter: function() {
