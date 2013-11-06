@@ -20,8 +20,8 @@ Swipster = (function() {
         this._maxSlide = 0;
 
         /**
-         * This object is only for internal tracking of the autoplay
-         * function with methods start() and stop().
+         * This object is only used for internal tracking of the
+         * setInterval thread.
          */
         this._thread = null;
 
