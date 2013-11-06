@@ -10,7 +10,7 @@ Swipster = (function() {
         counter: true,
         basicMode: false,
         interval: 5000
-    }
+    };
 
     function Swipster(element, options) {
         this.element = element;
@@ -178,8 +178,8 @@ Swipster = (function() {
             var template = '<ol class="' + this.classes.indicators + '">';
 
             for (var i = 0; i < this.numberOfSlides; i++) {
-                var classes = (i == this._index.current ? 'class="active"' : '')
-                  , index = i + 1;
+                var classes = (i == this._index.current ? 'class="active"' : '');
+                var index = i + 1;
 
                 template += '<li ' + classes + ' data-goto-slide="' + index + '"></li>';
             }
@@ -192,7 +192,7 @@ Swipster = (function() {
                 + '<div class="' + this.classes.controls.main + '">'
                 +     '<a href="#next" class="' + this.classes.controls.prev + '"></a>'
                 +     '<a href="#prev" class="' + this.classes.controls.next + '"></a>'
-                + '</div>'
+                + '</div>';
             
             return template;
         },
@@ -203,7 +203,7 @@ Swipster = (function() {
                 +     '<span class="' + this.classes.counter.current + '">' + (this._index.current + 1) + '</span>'
                 +     '<span class="divider">/</span>'
                 +     '<span class="' + this.classes.counter.total + '">' + this.numberOfSlides + '</span>'
-                + '</div>'
+                + '</div>';
             
             return template;
         },
@@ -279,22 +279,19 @@ Swipster = (function() {
          * ====================================================================== */
 
         _gotoNoAnimation: function(index) {
-            this._setIndex(index)
+            this._setIndex(index);
             this._renderSlides();
             this._renderIndicators();
             this._renderCounter();
         },
 
         _gotoWithAnimation: function (index) {
-            var slideClass
-              , animationClass
-              , $upcommingSlide
-              , $wrongUpcommingSlide
-              , classesToRemove = [
-                    this.classes.slide.main,
-                    this.classes.slide.prev,
-                    this.classes.slide.next
-                ].join(' ');
+            var slideClass, animationClass, $upcommingSlide, $wrongUpcommingSlide;
+            var classesToRemove = [
+                this.classes.slide.main,
+                this.classes.slide.prev,
+                this.classes.slide.next
+            ].join(' ');
 
             if (this._index.current < index) {
                 animationClass = 'animate-forward';
@@ -387,6 +384,8 @@ Swipster = (function() {
         },
 
         _onTouchEnd: function(event) {
+            var transitionDirection;
+
             if (!this.touchObject.initiated) {
                 return;
             }
@@ -402,13 +401,13 @@ Swipster = (function() {
                 this.touchObject.stopTimer = new Date().getTime();
 
                 if (this.touchObject.currentX < 0) {
-                    var transitionDirection = '-100%'
+                    transitionDirection = '-100%';
                 } else {
-                    var transitionDirection = '100%';
+                    transitionDirection = '100%';
                 }
 
                 if (this.touchObject.stepsX < 50) {
-                    var transitionDirection = '0';
+                    transitionDirection = '0';
                 }
 
                 this.$inner.css({
@@ -469,7 +468,7 @@ Swipster = (function() {
 
             this.$inner.children().each(function(index, value) {
                 if ($(this).attr('class').length <= 0) {
-                    $(this).addClass(self.classes.slide.main)
+                    $(this).addClass(self.classes.slide.main);
                 }
             });
         },
@@ -520,7 +519,7 @@ Swipster = (function() {
                 prev: prev,
                 current: current,
                 next: next
-            }
+            };
         },
 
         /**
