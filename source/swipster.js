@@ -496,7 +496,9 @@ Swipster = (function() {
         },
 
         _setIndex: function(index) {
-            var current = index;
+            var prev
+              , next
+              , current = index;
 
             if (current > this._maxSlide) {
                 current = 0;
@@ -504,15 +506,16 @@ Swipster = (function() {
                 current = this._maxSlide;
             }
 
-            var prev = current - 1;
-            var next = current + 1;
-
             if (prev < 0) {
                 prev = this._maxSlide;
+            } else {
+                prev = current - 1;
             }
 
             if (next > this._maxSlide) {
                 next = 0;
+            } else {
+                next = current + 1;
             }
 
             this._index = {
