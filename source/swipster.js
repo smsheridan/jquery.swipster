@@ -69,9 +69,9 @@ Swipster = (function() {
                 this.slides[i] = v;
             }, this));
 
-            this._setIndex(this.options.startPosition);
             this.numberOfSlides = this.slides.length;
             this._maxSlide = this.numberOfSlides - 1;
+            this._setIndex(this.options.startPosition);
 
             this.touchObject = {
                 startX: 0,
@@ -156,24 +156,22 @@ Swipster = (function() {
             for (var i = 0; i < this.numberOfSlides; i++) {
                 var slideClass = this.classes.slide.main;
 
-                if (i == 0) {
+                if (i == this._index.current) {
                     slideClass = this.classes.slide.current;
                 }
 
-                if (i == 1 && i != (this._maxSlide)) {
-                    slideClass = this.classes.slide.next;
+                if (this._index.next != this._index.prev) {
+                    if (i == this._index.next) {
+                        slideClass = this.classes.slide.next;
+                    } else if (i == this._index.prev) {
+                        slideClass = this.classes.slide.prev;
+                    }
                 }
 
-                if (i == (this._maxSlide) && i != 1) {
-                    slideClass = this.classes.slide.prev;
-                }
-
-                template += '<div class="' + slideClass + '">' + $(this.slides[i]).html() + '</div>';
+                template += '<div class="' + slideClass + '">' + this.slides[i].innerHTML + '</div>';
             }
 
-            template += '</div>';
-
-            return template;
+            return template + '</div>';
         },
 
         _indicatorsTemplate: function() {
