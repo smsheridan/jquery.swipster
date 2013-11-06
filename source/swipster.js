@@ -503,7 +503,7 @@ Swipster = (function() {
 
         _renderIndicators: function() {
             this.$indicators
-                .children('.active').removeClass('active')
+                .children('.active').removeClass('active').end()
                 .children('[data-goto-slide=' + (this._index.current + 1) + ']').addClass('active');
         },
 
