@@ -104,7 +104,7 @@ Swipster = (function() {
 
         start: function() {
             this._thread = setInterval($.proxy(function() {
-                this.next();
+                this.slideToNext();
             }, this), this.options.interval);
         },
 
@@ -182,7 +182,7 @@ Swipster = (function() {
             for (var i = 0; i < this.numberOfSlides; i++) {
                 var classes = (i == this._index.current ? 'class="active"' : '');
 
-                template += '<li ' + classes + ' data-goto-slide="' + i + '"></li>';
+                template += '<li ' + classes + ' data-slide-to="' + i + '"></li>';
             }
 
             return template + '</ol>';
@@ -226,19 +226,19 @@ Swipster = (function() {
 
                     if ($target.parent().hasClass(this.classes.indicators)) {
                         if (!$target.hasClass('active')) {
-                            this.gotoSlide($target.data('goto-slide'));
+                            this.slideTo($target.data('slide-to'));
                         }
                         
                         event.preventDefault();
                     }
 
                     if ($target.hasClass(this.classes.controls.next)) {
-                        this.next();
+                        this.slideToNext();
                         event.preventDefault();
                     }
 
                     if ($target.hasClass(this.classes.controls.prev)) {
-                        this.prev();
+                        this.slideToPrev();
                         event.preventDefault();
                     }
 
@@ -250,7 +250,7 @@ Swipster = (function() {
          * Public methods
          * ====================================================================== */
 
-        gotoSlide: function(index) {
+        slideTo: function(index) {
             if (this.$inner.hasClass('animating')) {
                 return false;
             }
@@ -262,12 +262,12 @@ Swipster = (function() {
             }
         },
 
-        next: function() {
-            this.gotoSlide(this._index.current + 1);
+        slideToNext: function() {
+            this.slideTo(this._index.current + 1);
         },
 
-        prev: function() {
-            this.gotoSlide(this._index.current - 1);
+        slideToPrev: function() {
+            this.slideTo(this._index.current - 1);
         },
 
         /* ======================================================================
@@ -307,7 +307,7 @@ Swipster = (function() {
 
             /**
              * Verify that the correct slide has the correct class, this is crucial
-             * for when we are animating to a specific slide, e.g gotoSlide(x).
+             * for when we are animating to a specific slide, e.g slideTo(x).
              */
             if (!$upcommingSlide.hasClass(slideClass)) {
                 $wrongUpcommingSlide
@@ -477,7 +477,7 @@ Swipster = (function() {
         _renderIndicators: function() {
             this.$indicators
                 .children('.active').removeClass('active').end()
-                .children('[data-goto-slide=' + this._index.current + ']').addClass('active');
+                .children('[data-slide-to=' + this._index.current + ']').addClass('active');
         },
 
         _renderCounter: function() {
