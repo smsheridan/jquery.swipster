@@ -65,14 +65,9 @@ p {
 .swipster__slide {
     display: none;
     
-    // @TODO: Fix this with some cool loading stuff
-    /*&:first-child {
+    &:first-child {
         display: block;
-    }*/
-
-    /**
-     * Here it should exist a --hidden stuff
-     */
+    }
 }
 
 .swipster__slide--next,
@@ -81,6 +76,10 @@ p {
     @include translateZ(0);
     @include backface-visibility(hidden);
     @include perspective(1000px);
+}
+
+.swipster__slide--hidden {
+    display: none;
 }
 
 .swipster__slide--next, .swipster__slide--prev {

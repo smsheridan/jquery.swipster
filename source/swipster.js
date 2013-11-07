@@ -50,7 +50,8 @@ Swipster = (function () {
                 main: 'swipster__slide',
                 current: 'swipster__slide--current',
                 next: 'swipster__slide--next',
-                prev: 'swipster__slide--prev'
+                prev: 'swipster__slide--prev',
+                hidden: 'swipster__slide--hidden'
             },
             controls: {
                 main: 'swipster__controls',
@@ -159,7 +160,7 @@ Swipster = (function () {
             var i, slideClass, template = '<div class="' + this.classes.inner + '">';
 
             for (i = 0; i < this.numberOfSlides; i++) {
-                slideClass = this.classes.slide.main;
+                slideClass = this.classes.slide.hidden;
 
                 if (i == this._index.current) {
                     slideClass = this.classes.slide.current;
@@ -294,7 +295,7 @@ Swipster = (function () {
             var slideClass, animationClass, $upcommingSlide, $wrongUpcommingSlide, classesToRemove;
 
             classesToRemove = [
-                this.classes.slide.main,
+                this.classes.slide.hidden,
                 this.classes.slide.prev,
                 this.classes.slide.next
             ].join(' ');
@@ -315,13 +316,13 @@ Swipster = (function () {
             $wrongUpcommingSlide = this.$inner.children('.' + slideClass);
 
             /**
-             * Verify that the correct slide has the correct class, this is crucial
-             * for when we are animating to a specific slide, e.g slideTo(x).
+             * Verify that the upcomming slide has the correct class, this is crucial
+             * for animating to a specific slide, e.g slideTo(x).
              */
             if (!$upcommingSlide.hasClass(slideClass)) {
                 $wrongUpcommingSlide
                     .removeClass(slideClass)
-                    .addClass(this.classes.slide.main);
+                    .addClass(this.classes.slide.hidden);
 
                 $upcommingSlide
                     .removeClass(classesToRemove)
@@ -459,7 +460,7 @@ Swipster = (function () {
 
         _renderSlides: function () {
             this.$inner.children().each($.proxy(function (index, element) {
-                var className = this.classes.slide.main;
+                var className = this.classes.slide.hidden;
 
                 if (index == this._index.current) {
                     className = this.classes.slide.current;
@@ -475,7 +476,7 @@ Swipster = (function () {
                 }
 
                 $(element).removeClass([
-                    this.classes.slide.main,
+                    this.classes.slide.hidden,
                     this.classes.slide.current,
                     this.classes.slide.prev,
                     this.classes.slide.next
