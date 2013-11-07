@@ -70,7 +70,7 @@ Swipster = (function () {
 
     Swipster.prototype = {
         init: function () {
-            this.$element.children().each($.proxy(function (i, v) {
+            this.$element.children('.' + this.classes.slide.main).each($.proxy(function (i, v) {
                 this.slides[i] = v;
             }, this));
 
