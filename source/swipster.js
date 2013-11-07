@@ -268,7 +268,7 @@ Swipster = (function () {
             if (this.options.basicMode) {
                 this._slideToSimple(index);
             } else {
-                this.slideToAnimation(index);
+                this._slideToAnimation(index);
             }
         },
 
@@ -289,7 +289,7 @@ Swipster = (function () {
             this._renderAll();
         },
 
-        slideToAnimation: function (index) {
+        _slideToAnimation: function (index) {
             var slideClass, animationClass, $upcommingSlide, $wrongUpcommingSlide, classesToRemove;
 
             classesToRemove = [
@@ -557,7 +557,7 @@ Swipster = (function () {
          * Returns: 'WebkitBoxShadow' (On Safari 5)
          */
         _supports: function (p, rp) {
-            var i, b = document.body || document.documentElement, s = b.style;
+            var v, i, b = document.body || document.documentElement, s = b.style;
          
             // No css support detected
             if (typeof s == 'undefined') {
