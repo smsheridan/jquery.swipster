@@ -181,9 +181,8 @@ Swipster = (function() {
 
             for (var i = 0; i < this.numberOfSlides; i++) {
                 var classes = (i == this._index.current ? 'class="active"' : '');
-                var index = i + 1;
 
-                template += '<li ' + classes + ' data-goto-slide="' + index + '"></li>';
+                template += '<li ' + classes + ' data-goto-slide="' + i + '"></li>';
             }
 
             return template + '</ol>';
@@ -232,7 +231,7 @@ Swipster = (function() {
 
                     if ($target.parent().hasClass(this.classes.indicators)) {
                         if (!$target.hasClass('active')) {
-                            this.gotoSlide($target.data('goto-slide') - 1);
+                            this.gotoSlide($target.data('goto-slide'));
                         }
                         
                         event.preventDefault();
@@ -478,7 +477,7 @@ Swipster = (function() {
         _renderIndicators: function() {
             this.$indicators
                 .children('.active').removeClass('active').end()
-                .children('[data-goto-slide=' + (this._index.current + 1) + ']').addClass('active');
+                .children('[data-goto-slide=' + this._index.current + ']').addClass('active');
         },
 
         _renderCounter: function() {
