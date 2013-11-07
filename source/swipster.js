@@ -79,7 +79,7 @@ Swipster = (function () {
             this._maxSlide = this.numberOfSlides - 1;
             this._setIndex(this.options.startPosition);
 
-            this.touchObject = {
+            /*this.touchObject = {
                 startX: 0,
                 startY: 0,
                 startTimer: 0,
@@ -87,6 +87,20 @@ Swipster = (function () {
                 currentX: 0,
                 currentY: 0,
                 initiated: false
+            };*/
+
+            this.touch = {
+                startX: 0,
+                startY: 0,
+                currentX: 0,
+                currentY: 0,
+                lastX: 0,
+                lastY: 0,
+                direction: '',
+                distanceX: 0,
+                distanceY: 0,
+                initiated: false,
+                directionLocked: false
             };
 
             this.createDOM();
@@ -211,22 +225,16 @@ Swipster = (function () {
          * ====================================================================== */
 
         /**
-         * @TODO: Bind on Swipster main wrapper, delegate events
          * @TODO: Check if touch events exists before attaching them
          */
         bindEvents: function () {
             this.$element.on('click', $.proxy(this._handleClick, this));
-
-            this.$inner.on('touchstart', $.proxy(this._onTouchStart, this));
-            this.$inner.on('touchmove', $.proxy(this._onTouchMove, this));
-            this.$inner.on('touchend', $.proxy(this._onTouchEnd, this));
+            this.$element.on('touchstart touchmove touchcancel touchend', $.proxy(this._handleTouch, this));
         },
 
         unbindEvents: function () {
             this.$element.off('click', this._handleClick);
-            this.$inner.off('touchstart', this._onTouchStart);
-            this.$inner.off('touchmove', this._onTouchMove);
-            this.$inner.off('touchend', this._onTouchEnd);
+            this.$element.off('touchstart touchmove touchcancel touchend', this._handleTouch);
         },
 
         _handleClick: function (event) {
@@ -251,6 +259,88 @@ Swipster = (function () {
                         this.slideToPrev();
                         event.preventDefault();
                     }
+
+                    break;
+            }
+        },
+
+        /**
+         * @TODO: Create separate functions for touchstart, touchmove and touchend.
+         */
+        _handleTouch: function(event) {
+            var touchEvent = event.originalEvent.touches[0];
+
+            switch(event.type) {
+                case 'touchstart':
+                    if (this.touch.initiated) {
+                        return;
+                    }
+
+                    this.touch = {
+                        startX: touchEvent.pageX,
+                        startY: touchEvent.pageY,
+                        currentX: 0,
+                        currentY: 0,
+                        lastX: 0,
+                        lastY: 0,
+                        direction: '',
+                        distanceX: 0,
+                        distanceY: 0,
+                        initiated: true,
+                        directionLocked: false
+                    };
+                    
+                    break;
+
+                case 'touchmove':
+                    if (!this.touch.initiated) {
+                        return;
+                    }
+
+                    this.touch.currentX = touchEvent.pageX - this.touch.startX;
+                    this.touch.currentY = touchEvent.pageY - this.touch.startY;
+
+                    if (this.touch.currentX != this.touch.lastX) {
+                        this.touch.distanceX = this.touch.distanceX + 1;
+                    }
+
+                    if (this.touch.currentY != this.touch.lastY) {
+                        this.touch.distanceY = this.touch.distanceY + 1;
+                    }
+
+                    this.touch.lastY = this.touch.currentY;
+                    this.touch.lastX = this.touch.currentX;
+
+                    // Dont track super small touch moves
+                    if (this.touch.distanceX < 10 && this.touch.distanceY < 10) {
+                        return;
+                    }
+
+                    // Check if we are traveling down instead of swiping
+                    if (!this.directionLocked && this.touch.distanceY > this.touch.distanceX) {
+                        this.initiated = false;
+                        return;
+                    }
+
+                    event.preventDefault();
+                    this.directionLocked = true;
+
+                    break;
+
+                case 'touchend':
+                    if (!this.touch.initiated) {
+                        return;
+                    }
+
+                    if (Math.abs(this.touch.currentX) > 25) {
+                        if (this.touch.currentX < 0) {
+                            this.slideToNext();
+                        } else {
+                            this.slideToPrev();
+                        }
+                    }
+                    
+                    this.touch.initiated = false;
 
                     break;
             }
@@ -334,116 +424,6 @@ Swipster = (function () {
         _animationEnd: function (event) {
             this.$inner.removeClass('animating animate-to-next animate-to-prev');
             this._renderAll();
-        },
-
-        /* ======================================================================
-         * Touch Handlers & Animations
-         * ====================================================================== */
-
-        /**
-         * @TODO: Better touch handling
-         * @TODO: Remove commented code
-         * @TODO: One event handler for touch
-         * @TODO: Skip this stuff and just enable regular swipe if there are only two slides
-         */
-        _onTouchStart: function (event) {
-            if (this.touchObject.initiated) {
-                return;
-            }
-
-            this.touchObject.startX = event.originalEvent.touches[0].clientX;
-            this.touchObject.startY = event.originalEvent.touches[0].clientY;
-            this.touchObject.stepsX = 0;
-            this.touchObject.stepsY = 0;
-            this.touchObject.initiated = true;
-            this.touchObject.directionLocked = false;
-            this.touchObject.startTimer = new Date().getTime();
-        },
-
-        _onTouchMove: function (event) {
-            this.touchObject.currentX = event.originalEvent.touches[0].clientX - this.touchObject.startX;
-            this.touchObject.currentY = event.originalEvent.touches[0].clientY - this.touchObject.startY;
-            this.touchObject.stepsX = Math.abs(this.touchObject.currentX);
-            this.touchObject.stepsY = Math.abs(this.touchObject.currentY);
-
-            /*if (this.touchObject.stepsX < 10 && this.touchObject.stepsY < 10) {
-                return;
-            }*/
-
-            if (!this.touchObject.directionLocked && (this.touchObject.stepsY > this.touchObject.stepsX)) {
-                this.touchObject.initiated = false;
-                return;
-            }
-
-            this.touchObject.directionLocked = true;
-            var touchOffset = this.touchObject.currentX;
-
-            /*if (this.touchObject.currentX > 0) {
-                touchOffset = this.touchObject.currentX - 10;
-            } else {
-                touchOffset = this.touchObject.currentX + 10;
-            }*/
-
-            if (!this.$inner.hasClass('animating')) {
-                this.$inner.css({
-                    'transform': 'translate3d(' + touchOffset + 'px, 0, 0)'
-                });
-            }
-
-            event.preventDefault();
-        },
-
-        _onTouchEnd: function (event) {
-            var transitionDirection;
-
-            if (!this.touchObject.initiated) {
-                return;
-            }
-
-            if (!this.touchObject.directionLocked) {
-                this.$inner.trigger('click');
-                return;
-            }
-
-            if (!this.$inner.hasClass('animating')) {
-                this.touchObject.initiated = false;
-                this.$inner.addClass('animating');
-                this.touchObject.stopTimer = new Date().getTime();
-
-                if (this.touchObject.currentX < 0) {
-                    transitionDirection = '-100%';
-                } else {
-                    transitionDirection = '100%';
-                }
-
-                if (this.touchObject.stepsX < 50) {
-                    transitionDirection = '0';
-                }
-
-                this.$inner.css({
-                    'transition': 'all 0.3s ease',
-                    'transform': 'translate3d(' + transitionDirection + ', 0, 0)'
-                });
-
-                this.$inner.transitionEnd($.proxy(this._touchAnimationEnd, this));
-            }
-
-            event.preventDefault();
-        },
-
-        _touchAnimationEnd: function (event) {
-            this.$inner.removeClass('animating');
-            this.$inner.removeAttr('style');
-            
-            if (this.touchObject.stepsX >= 50) {
-                if (this.touchObject.currentX < 0) {
-                    this._incrementIndex();
-                    this._renderAll();
-                } else {
-                    this._decrementIndex();
-                    this._renderAll();
-                }
-            }
         },
 
         /* ======================================================================
