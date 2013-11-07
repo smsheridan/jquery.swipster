@@ -209,6 +209,7 @@ Swipster = (function() {
 
         /**
          * @TODO: Bind on Swipster main wrapper, delegate events
+         * @TODO: Check if touch events exists before attaching them
          */
         bindEvents: function() {
             this.$element.on('click', $.proxy(this._handleClick, this));
@@ -282,12 +283,14 @@ Swipster = (function() {
 
         _gotoWithAnimation: function (index) {
             var slideClass, animationClass, $upcommingSlide, $wrongUpcommingSlide;
+
             var classesToRemove = [
                 this.classes.slide.main,
                 this.classes.slide.prev,
                 this.classes.slide.next
             ].join(' ');
 
+            // Check if in which direction we are supposed to animate
             if (this._index.current < index) {
                 animationClass = 'animate-to-next';
                 slideClass = this.classes.slide.next;
@@ -296,11 +299,16 @@ Swipster = (function() {
                 slideClass = this.classes.slide.prev;
             }
 
+            // Update index after the direction check
             this._setIndex(index);
 
             $upcommingSlide = this.$inner.children().eq(this._index.current);
             $wrongUpcommingSlide = this.$inner.children('.' + slideClass);
 
+            /**
+             * Verify that the correct slide has the correct class, this is crucial
+             * for when we are animating to a specific slide, e.g gotoSlide(x).
+             */
             if (!$upcommingSlide.hasClass(slideClass)) {
                 $wrongUpcommingSlide
                     .removeClass(slideClass)
@@ -311,6 +319,7 @@ Swipster = (function() {
                     .addClass(slideClass);
             }
 
+            // Perform actual animation
             this.$inner.addClass('animating ' + animationClass).transitionEnd($.proxy(this._animationEnd, this));
         },
 
@@ -439,33 +448,35 @@ Swipster = (function() {
          * Some render functions
          * ====================================================================== */
 
-        /**
-         * @TODO: Optimize this
-         */
         _renderSlides: function() {
-            var self = this;
+            this.$inner.children().each($.proxy(function(index, element) {
+                var className = this.classes.slide.main;
 
-            this.$inner.children().each(function(index, value) {
-                $(this).removeClass(
-                    self.classes.slide.main + ' ' +
-                    self.classes.slide.current + ' ' +
-                    self.classes.slide.prev + ' ' +
-                    self.classes.slide.next
-                );
-            });
-
-            this.$inner.children().eq(this._index.current).addClass(this.classes.slide.current);
-
-            if (this._index.prev != this._index.next) {
-                this.$inner.children().eq(this._index.next).addClass(this.classes.slide.next);
-                this.$inner.children().eq(this._index.prev).addClass(this.classes.slide.prev);
-            }
-
-            this.$inner.children().each(function(index, value) {
-                if ($(this).attr('class').length <= 0) {
-                    $(this).addClass(self.classes.slide.main);
+                if (index == this._index.current) {
+                    className = this.classes.slide.current;
                 }
-            });
+
+                console.log(index == this._index.next);
+                console.log(index);
+                console.log(this._index.next);
+                console.log('-----');
+
+                if (this._index.next != this._index.prev) {
+                    if (index == this._index.next) {
+
+                        className = this.classes.slide.next;
+                    } else if (index == this._index.prev) {
+                        className = this.classes.slide.prev;
+                    }
+                }
+
+                $(element).removeClass([
+                    this.classes.slide.main,
+                    this.classes.slide.current,
+                    this.classes.slide.prev,
+                    this.classes.slide.next
+                ].join(' ')).addClass(className);
+            }, this));
         },
 
         _renderIndicators: function() {
@@ -499,16 +510,16 @@ Swipster = (function() {
                 current = this._maxSlide;
             }
 
+            prev = current - 1;
+            
             if (prev < 0) {
                 prev = this._maxSlide;
-            } else {
-                prev = current - 1;
             }
+
+            next = current + 1;
 
             if (next > this._maxSlide) {
                 next = 0;
-            } else {
-                next = current + 1;
             }
 
             this._index = {
