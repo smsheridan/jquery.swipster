@@ -132,7 +132,7 @@
     // (object._attribute would be forbidden).
     "nomen": false,
     // Whether only one var statement per function should be allowed.
-    "onevar": false,
+    "onevar": true,
     // Whether increment and decrement (`++` and `--`) should be forbidden.
     "plusplus": false,
     // Whether all forms of subscript notation are allowed.

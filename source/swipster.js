@@ -156,10 +156,10 @@ Swipster = (function () {
         },
 
         _slideTemplate: function () {
-            var template = '<div class="' + this.classes.inner + '">';
+            var i, slideClass, template = '<div class="' + this.classes.inner + '">';
 
-            for (var i = 0; i < this.numberOfSlides; i++) {
-                var slideClass = this.classes.slide.main;
+            for (i = 0; i < this.numberOfSlides; i++) {
+                slideClass = this.classes.slide.main;
 
                 if (i == this._index.current) {
                     slideClass = this.classes.slide.current;
@@ -180,12 +180,11 @@ Swipster = (function () {
         },
 
         _indicatorsTemplate: function () {
-            var template = '<ol class="' + this.classes.indicators + '">';
+            var i, className, template = '<ol class="' + this.classes.indicators + '">';
 
-            for (var i = 0; i < this.numberOfSlides; i++) {
-                var classes = (i == this._index.current ? 'class="active"' : '');
-
-                template += '<li ' + classes + ' data-slide-to="' + i + '"></li>';
+            for (i = 0; i < this.numberOfSlides; i++) {
+                className = (i == this._index.current ? 'active' : '');
+                template += '<li class="' + className + '" data-slide-to="' + i + '"></li>';
             }
 
             return template + '</ol>';
@@ -285,9 +284,9 @@ Swipster = (function () {
         },
 
         _gotoWithAnimation: function (index) {
-            var slideClass, animationClass, $upcommingSlide, $wrongUpcommingSlide;
+            var slideClass, animationClass, $upcommingSlide, $wrongUpcommingSlide, classesToRemove;
 
-            var classesToRemove = [
+            classesToRemove = [
                 this.classes.slide.main,
                 this.classes.slide.prev,
                 this.classes.slide.next
@@ -545,8 +544,7 @@ Swipster = (function () {
          * Returns: 'WebkitBoxShadow' (On Safari 5)
          */
         _supports: function (p, rp) {
-            var b = document.body || document.documentElement,
-            s = b.style;
+            var i, b = document.body || document.documentElement, s = b.style;
          
             // No css support detected
             if (typeof s == 'undefined') {
@@ -562,7 +560,7 @@ Swipster = (function () {
             v = ['Moz', 'Webkit', 'Khtml', 'O', 'ms', 'Icab'],
             p = p.charAt(0).toUpperCase() + p.substr(1);
 
-            for (var i = 0; i < v.length; i++) {
+            for (i = 0; i < v.length; i++) {
                 if (typeof s[v[i] + p] == 'string') {
                     return rp ? (v[i] + p) : true;
                 }
