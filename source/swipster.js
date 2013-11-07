@@ -93,16 +93,8 @@ Swipster = (function () {
         },
 
         destroy: function () {
-            this.$element.off('click', this._handleClick);
-            this.$inner.off('touchstart', this._onTouchStart);
-            this.$inner.off('touchmove', this._onTouchMove);
-            this.$inner.off('touchend', this._onTouchEnd);
-
-            this.$element.prepend(this.slides);
-            this.$inner.remove();
-            this.$indicators.remove();
-            this.$controls.remove();
-            this.$counter.remove();
+            this.unbindEvents();
+            this.destroyDOM();
         },
 
         start: function () {
@@ -153,6 +145,14 @@ Swipster = (function () {
             this.$indicators = this.$element.children('.' + this.classes.indicators);
             this.$controls = this.$element.children('.' + this.classes.controls.main);
             this.$counter = this.$element.children('.' + this.classes.counter.main);
+        },
+
+        destroyDOM: function () {
+            this.$element.prepend(this.slides);
+            this.$inner.remove();
+            this.$indicators.remove();
+            this.$controls.remove();
+            this.$counter.remove();
         },
 
         _slideTemplate: function () {
@@ -219,6 +219,13 @@ Swipster = (function () {
             this.$inner.on('touchstart', $.proxy(this._onTouchStart, this));
             this.$inner.on('touchmove', $.proxy(this._onTouchMove, this));
             this.$inner.on('touchend', $.proxy(this._onTouchEnd, this));
+        },
+
+        unbindEvents: function () {
+            this.$element.off('click', this._handleClick);
+            this.$inner.off('touchstart', this._onTouchStart);
+            this.$inner.off('touchmove', this._onTouchMove);
+            this.$inner.off('touchend', this._onTouchEnd);
         },
 
         _handleClick: function (event) {
