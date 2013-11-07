@@ -189,24 +189,18 @@ Swipster = (function() {
         },
 
         _controlsTemplate: function() {
-            var template = ''
-                + '<div class="' + this.classes.controls.main + '">'
-                +     '<a href="#next" class="' + this.classes.controls.prev + '"></a>'
-                +     '<a href="#prev" class="' + this.classes.controls.next + '"></a>'
-                + '</div>';
-            
-            return template;
+            return  '<div class="' + this.classes.controls.main + '">' +
+                        '<a href="#next" class="' + this.classes.controls.prev + '"></a>' +
+                        '<a href="#prev" class="' + this.classes.controls.next + '"></a>' +
+                    '</div>';
         },
         
         _counterTemplate: function() {
-            var template = ''
-                + '<div class="' + this.classes.counter.main + '">'
-                +     '<span class="' + this.classes.counter.current + '">' + (this._index.current + 1) + '</span>'
-                +     '<span class="divider">/</span>'
-                +     '<span class="' + this.classes.counter.total + '">' + this.numberOfSlides + '</span>'
-                + '</div>';
-            
-            return template;
+            return  '<div class="' + this.classes.counter.main + '">' +
+                        '<span class="' + this.classes.counter.current + '">' + (this._index.current + 1) + '</span>' +
+                        '<span class="divider">/</span>' +
+                        '<span class="' + this.classes.counter.total + '">' + this.numberOfSlides + '</span>' +
+                    '</div>';
         },
 
         /* ======================================================================
@@ -497,9 +491,7 @@ Swipster = (function() {
         },
 
         _setIndex: function(index) {
-            var prev
-              , next
-              , current = index;
+            var prev, next, current = index;
 
             if (current > this._maxSlide) {
                 current = 0;
