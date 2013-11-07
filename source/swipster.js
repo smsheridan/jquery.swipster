@@ -2,7 +2,7 @@
 
 var Swipster;
 
-Swipster = (function() {
+Swipster = (function () {
     'use strict';
 
     var defaults = {
@@ -69,8 +69,8 @@ Swipster = (function() {
     }
 
     Swipster.prototype = {
-        init: function() {
-            this.$element.children().each($.proxy(function(i, v) {
+        init: function () {
+            this.$element.children().each($.proxy(function (i, v) {
                 this.slides[i] = v;
             }, this));
 
@@ -92,7 +92,7 @@ Swipster = (function() {
             this.bindEvents();
         },
 
-        destroy: function() {
+        destroy: function () {
             this.$element.off('click', this._handleClick);
             this.$inner.off('touchstart', this._onTouchStart);
             this.$inner.off('touchmove', this._onTouchMove);
@@ -105,13 +105,13 @@ Swipster = (function() {
             this.$counter.remove();
         },
 
-        start: function() {
-            this._thread = setInterval($.proxy(function() {
+        start: function () {
+            this._thread = setInterval($.proxy(function () {
                 this.slideToNext();
             }, this), this.options.interval);
         },
 
-        stop: function() {
+        stop: function () {
             clearInterval(this._thread);
         },
 
@@ -119,7 +119,7 @@ Swipster = (function() {
          * Initial DOM manipulation and template structure
          * ====================================================================== */
 
-        createDOM: function() {
+        createDOM: function () {
             var template = this._slideTemplate();
 
             if (this.options.indicators) {
@@ -155,7 +155,7 @@ Swipster = (function() {
             this.$counter = this.$element.children('.' + this.classes.counter.main);
         },
 
-        _slideTemplate: function() {
+        _slideTemplate: function () {
             var template = '<div class="' + this.classes.inner + '">';
 
             for (var i = 0; i < this.numberOfSlides; i++) {
@@ -179,7 +179,7 @@ Swipster = (function() {
             return template + '</div>';
         },
 
-        _indicatorsTemplate: function() {
+        _indicatorsTemplate: function () {
             var template = '<ol class="' + this.classes.indicators + '">';
 
             for (var i = 0; i < this.numberOfSlides; i++) {
@@ -191,14 +191,14 @@ Swipster = (function() {
             return template + '</ol>';
         },
 
-        _controlsTemplate: function() {
+        _controlsTemplate: function () {
             return  '<div class="' + this.classes.controls.main + '">' +
                         '<a href="#next" class="' + this.classes.controls.prev + '"></a>' +
                         '<a href="#prev" class="' + this.classes.controls.next + '"></a>' +
                     '</div>';
         },
         
-        _counterTemplate: function() {
+        _counterTemplate: function () {
             return  '<div class="' + this.classes.counter.main + '">' +
                         '<span class="' + this.classes.counter.current + '">' + (this._index.current + 1) + '</span>' +
                         '<span class="divider">/</span>' +
@@ -214,7 +214,7 @@ Swipster = (function() {
          * @TODO: Bind on Swipster main wrapper, delegate events
          * @TODO: Check if touch events exists before attaching them
          */
-        bindEvents: function() {
+        bindEvents: function () {
             this.$element.on('click', $.proxy(this._handleClick, this));
 
             this.$inner.on('touchstart', $.proxy(this._onTouchStart, this));
@@ -222,7 +222,7 @@ Swipster = (function() {
             this.$inner.on('touchend', $.proxy(this._onTouchEnd, this));
         },
 
-        _handleClick: function(event) {
+        _handleClick: function (event) {
             switch (event.type) {
                 case 'click':
                     var $target = $(event.target);
@@ -253,7 +253,7 @@ Swipster = (function() {
          * Public methods
          * ====================================================================== */
 
-        slideTo: function(index) {
+        slideTo: function (index) {
             if (this.$inner.hasClass('animating')) {
                 return false;
             }
@@ -265,11 +265,11 @@ Swipster = (function() {
             }
         },
 
-        slideToNext: function() {
+        slideToNext: function () {
             this.slideTo(this._index.current + 1);
         },
 
-        slideToPrev: function() {
+        slideToPrev: function () {
             this.slideTo(this._index.current - 1);
         },
 
@@ -277,7 +277,7 @@ Swipster = (function() {
          * Internal slide handling
          * ====================================================================== */
 
-        _gotoNoAnimation: function(index) {
+        _gotoNoAnimation: function (index) {
             this._setIndex(index);
             this._renderSlides();
             this._renderIndicators();
@@ -326,7 +326,7 @@ Swipster = (function() {
             this.$inner.addClass('animating ' + animationClass).transitionEnd($.proxy(this._animationEnd, this));
         },
 
-        _animationEnd: function(event) {
+        _animationEnd: function (event) {
             this.$inner.removeClass('animating animate-to-next animate-to-prev');
             this._renderSlides();
             this._renderIndicators();
@@ -343,7 +343,7 @@ Swipster = (function() {
          * @TODO: One event handler for touch
          * @TODO: Skip this stuff and just enable regular swipe if there are only two slides
          */
-        _onTouchStart: function(event) {
+        _onTouchStart: function (event) {
             if (this.touchObject.initiated) {
                 return;
             }
@@ -357,7 +357,7 @@ Swipster = (function() {
             this.touchObject.startTimer = new Date().getTime();
         },
 
-        _onTouchMove: function(event) {
+        _onTouchMove: function (event) {
             this.touchObject.currentX = event.originalEvent.touches[0].clientX - this.touchObject.startX;
             this.touchObject.currentY = event.originalEvent.touches[0].clientY - this.touchObject.startY;
             this.touchObject.stepsX = Math.abs(this.touchObject.currentX);
@@ -390,7 +390,7 @@ Swipster = (function() {
             event.preventDefault();
         },
 
-        _onTouchEnd: function(event) {
+        _onTouchEnd: function (event) {
             var transitionDirection;
 
             if (!this.touchObject.initiated) {
@@ -428,7 +428,7 @@ Swipster = (function() {
             event.preventDefault();
         },
 
-        _touchAnimationEnd: function(event) {
+        _touchAnimationEnd: function (event) {
             this.$inner.removeClass('animating');
             this.$inner.removeAttr('style');
             
@@ -451,8 +451,8 @@ Swipster = (function() {
          * Some render functions
          * ====================================================================== */
 
-        _renderSlides: function() {
-            this.$inner.children().each($.proxy(function(index, element) {
+        _renderSlides: function () {
+            this.$inner.children().each($.proxy(function (index, element) {
                 var className = this.classes.slide.main;
 
                 if (index == this._index.current) {
@@ -477,13 +477,13 @@ Swipster = (function() {
             }, this));
         },
 
-        _renderIndicators: function() {
+        _renderIndicators: function () {
             this.$indicators
                 .children('.active').removeClass('active').end()
                 .children('[data-slide-to=' + this._index.current + ']').addClass('active');
         },
 
-        _renderCounter: function() {
+        _renderCounter: function () {
             this.$counter.children('.' + this.classes.counter.current).text(this._index.current + 1);
         },
 
@@ -491,15 +491,15 @@ Swipster = (function() {
          * Some nice helpers
          * ====================================================================== */
 
-        _incrementIndex: function() {
+        _incrementIndex: function () {
             this._setIndex(this._index.current + 1);
         },
 
-        _decrementIndex: function() {
+        _decrementIndex: function () {
             this._setIndex(this._index.current - 1);
         },
 
-        _setIndex: function(index) {
+        _setIndex: function (index) {
             var prev, next, current = index;
 
             if (current > this._maxSlide) {
@@ -544,7 +544,7 @@ Swipster = (function() {
          * Returns: 'MozBoxShadow' (On Firefox4 beta4)
          * Returns: 'WebkitBoxShadow' (On Safari 5)
          */
-        _supports: function(p, rp) {
+        _supports: function (p, rp) {
             var b = document.body || document.documentElement,
             s = b.style;
          
@@ -562,7 +562,7 @@ Swipster = (function() {
             v = ['Moz', 'Webkit', 'Khtml', 'O', 'ms', 'Icab'],
             p = p.charAt(0).toUpperCase() + p.substr(1);
 
-            for(var i = 0; i < v.length; i++) {
+            for (var i = 0; i < v.length; i++) {
                 if (typeof s[v[i] + p] == 'string') {
                     return rp ? (v[i] + p) : true;
                 }
@@ -570,5 +570,5 @@ Swipster = (function() {
         }
     };
 
-    return Swipster;    
+    return Swipster;
 })();

@@ -138,9 +138,9 @@
     // Whether all forms of subscript notation are allowed.
     "sub": false,
     // Whether trailing whitespace rules apply.
-    "trailing": false,
+    "trailing": true,
     // Whether strict whitespace rules apply.
-    "white": false,
+    "white": true,
     // Specify indentation.
     "indent": 4
 }
