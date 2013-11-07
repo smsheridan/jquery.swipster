@@ -460,7 +460,6 @@ Swipster = (function () {
 
                 if (this._index.next != this._index.prev) {
                     if (index == this._index.next) {
-
                         className = this.classes.slide.next;
                     } else if (index == this._index.prev) {
                         className = this.classes.slide.prev;
@@ -490,7 +489,7 @@ Swipster = (function () {
             if (!this.options.counter) {
                 return false;
             }
-            
+
             this.$counter.children('.' + this.classes.counter.current).text(this._index.current + 1);
         },
 
