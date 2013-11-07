@@ -3,6 +3,8 @@
 var Swipster;
 
 Swipster = (function() {
+    'use strict';
+
     var defaults = {
         startPosition: 0,
         indicators: true,
@@ -226,7 +228,7 @@ Swipster = (function() {
         _handleClick: function(event) {
             switch (event.type) {
                 case 'click':
-                    $target = $(event.target);
+                    var $target = $(event.target);
 
                     if ($target.parent().hasClass(this.classes.indicators)) {
                         if (!$target.hasClass('active')) {
