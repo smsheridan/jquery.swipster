@@ -229,12 +229,12 @@ Swipster = (function () {
          */
         bindEvents: function () {
             this.$element.on('click', $.proxy(this._handleClick, this));
-            this.$element.on('touchstart touchmove touchcancel touchend', $.proxy(this._handleTouch, this));
+            this.$inner.on('touchstart touchmove touchend', $.proxy(this._handleTouch, this));
         },
 
         unbindEvents: function () {
             this.$element.off('click', this._handleClick);
-            this.$element.off('touchstart touchmove touchcancel touchend', this._handleTouch);
+            this.$element.off('touchstart touchmove touchend', this._handleTouch);
         },
 
         _handleClick: function (event) {
@@ -273,7 +273,11 @@ Swipster = (function () {
             switch(event.type) {
                 case 'touchstart':
                     if (this.touch.initiated) {
-                        return;
+                        return false;
+                    }
+
+                    if (this.$inner.hasClass('animating')) {
+                        event.preventDefault();
                     }
 
                     this.touch = {
@@ -294,7 +298,7 @@ Swipster = (function () {
 
                 case 'touchmove':
                     if (!this.touch.initiated) {
-                        return;
+                        return false;
                     }
 
                     this.touch.currentX = touchEvent.pageX - this.touch.startX;
@@ -313,23 +317,23 @@ Swipster = (function () {
 
                     // Dont track super small touch moves
                     if (this.touch.distanceX < 10 && this.touch.distanceY < 10) {
-                        return;
+                        return false;
                     }
 
                     // Check if we are traveling down instead of swiping
-                    if (!this.directionLocked && this.touch.distanceY > this.touch.distanceX) {
-                        this.initiated = false;
-                        return;
+                    if (this.touch.distanceY < this.touch.distanceX) {
+                        this.touch.initiated = false;
+                        return false;
                     }
 
                     event.preventDefault();
-                    this.directionLocked = true;
+                    this.touch.directionLocked = true;
 
                     break;
 
                 case 'touchend':
                     if (!this.touch.initiated) {
-                        return;
+                        return false;
                     }
 
                     if (Math.abs(this.touch.currentX) > 25) {
@@ -339,9 +343,8 @@ Swipster = (function () {
                             this.slideToPrev();
                         }
                     }
-                    
-                    this.touch.initiated = false;
 
+                    this.touch.initiated = false;
                     break;
             }
         },
@@ -418,7 +421,7 @@ Swipster = (function () {
             }
 
             // Perform actual animation
-            this.$inner.addClass('animating ' + animationClass).transitionEnd($.proxy(this._animationEnd, this));
+            this.$inner.addClass('animating ' + animationClass).one('transitionend', $.proxy(this._animationEnd, this));
         },
 
         _animationEnd: function (event) {
