@@ -14,6 +14,9 @@ Swipster = (function() {
         interval: 5000
     };
 
+    /**
+     * @TODO: Add support for dispatching events that other components can listen to
+     */
     function Swipster(element, options) {
         this.element = element;
         this.$element = $(this.element);
