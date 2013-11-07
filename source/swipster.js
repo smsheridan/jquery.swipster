@@ -477,12 +477,20 @@ Swipster = (function () {
         },
 
         _renderIndicators: function () {
+            if (!this.options.indicators) {
+                return false;
+            }
+
             this.$indicators
                 .children('.active').removeClass('active').end()
                 .children('[data-slide-to=' + this._index.current + ']').addClass('active');
         },
 
         _renderCounter: function () {
+            if (!this.options.counter) {
+                return false;
+            }
+            
             this.$counter.children('.' + this.classes.counter.current).text(this._index.current + 1);
         },
 
