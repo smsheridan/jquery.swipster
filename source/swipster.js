@@ -266,9 +266,9 @@ Swipster = (function () {
             }
 
             if (this.options.basicMode) {
-                this._gotoNoAnimation(index);
+                this._slideToSimple(index);
             } else {
-                this._gotoWithAnimation(index);
+                this.slideToAnimation(index);
             }
         },
 
@@ -284,12 +284,12 @@ Swipster = (function () {
          * Internal slide handling
          * ====================================================================== */
 
-        _gotoNoAnimation: function (index) {
+        _slideToSimple: function (index) {
             this._setIndex(index);
             this._renderAll();
         },
 
-        _gotoWithAnimation: function (index) {
+        slideToAnimation: function (index) {
             var slideClass, animationClass, $upcommingSlide, $wrongUpcommingSlide, classesToRemove;
 
             classesToRemove = [
