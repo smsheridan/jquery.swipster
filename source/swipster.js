@@ -286,9 +286,7 @@ Swipster = (function () {
 
         _gotoNoAnimation: function (index) {
             this._setIndex(index);
-            this._renderSlides();
-            this._renderIndicators();
-            this._renderCounter();
+            this._renderAll();
         },
 
         _gotoWithAnimation: function (index) {
@@ -335,9 +333,7 @@ Swipster = (function () {
 
         _animationEnd: function (event) {
             this.$inner.removeClass('animating animate-to-next animate-to-prev');
-            this._renderSlides();
-            this._renderIndicators();
-            this._renderCounter();
+            this._renderAll();
         },
 
         /* ======================================================================
@@ -442,14 +438,10 @@ Swipster = (function () {
             if (this.touchObject.stepsX >= 50) {
                 if (this.touchObject.currentX < 0) {
                     this._incrementIndex();
-                    this._renderSlides();
-                    this._renderIndicators();
-                    this._renderCounter();
+                    this._renderAll();
                 } else {
                     this._decrementIndex();
-                    this._renderSlides();
-                    this._renderIndicators();
-                    this._renderCounter();
+                    this._renderAll();
                 }
             }
         },
@@ -492,6 +484,12 @@ Swipster = (function () {
 
         _renderCounter: function () {
             this.$counter.children('.' + this.classes.counter.current).text(this._index.current + 1);
+        },
+
+        _renderAll: function () {
+            this._renderSlides();
+            this._renderIndicators();
+            this._renderCounter();
         },
 
         /* ======================================================================
