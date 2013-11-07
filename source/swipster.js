@@ -456,11 +456,6 @@ Swipster = (function() {
                     className = this.classes.slide.current;
                 }
 
-                console.log(index == this._index.next);
-                console.log(index);
-                console.log(this._index.next);
-                console.log('-----');
-
                 if (this._index.next != this._index.prev) {
                     if (index == this._index.next) {
 
@@ -511,7 +506,7 @@ Swipster = (function() {
             }
 
             prev = current - 1;
-            
+
             if (prev < 0) {
                 prev = this._maxSlide;
             }
