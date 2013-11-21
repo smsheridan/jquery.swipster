@@ -46,6 +46,7 @@ Swipster = (function () {
         this.classes = {
             main: 'swipster',
             inner: 'swipster__inner',
+            wrapper: 'swipster__wrapper',
             slide: {
                 main: 'swipster__slide',
                 current: 'swipster__slide--current',
@@ -161,7 +162,11 @@ Swipster = (function () {
         },
 
         _slideTemplate: function () {
-            var i, slideClass, template = '<div class="' + this.classes.inner + '">';
+            var i,
+                slideClass,
+
+            template = '<div class="' + this.classes.wrapper + '">' +
+                            '<div class="' + this.classes.inner + '">';
 
             for (i = 0; i < this.numberOfSlides; i++) {
                 slideClass = this.classes.slide.hidden;
@@ -181,7 +186,7 @@ Swipster = (function () {
                 template += '<div class="' + slideClass + '">' + this.slides[i].innerHTML + '</div>';
             }
 
-            return template + '</div>';
+            return template + '</div></div>';
         },
 
         _indicatorsTemplate: function () {
