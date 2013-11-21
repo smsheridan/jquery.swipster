@@ -139,6 +139,7 @@ p {
     padding: 0;
     margin: 0;
     text-align: center;
+    z-index: 10;
 }
 
 .swipster__indicators li {
@@ -167,6 +168,7 @@ p {
     width: 60px;
     height: 60px;
     background-color: red;
+    z-index: 10;
 }
 
 .swipster__control--next {
