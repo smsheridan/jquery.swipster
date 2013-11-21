@@ -79,17 +79,7 @@ Swipster = (function () {
             this._maxSlide = this.numberOfSlides - 1;
             this._setIndex(this.options.startPosition);
 
-            /*this.touchObject = {
-                startX: 0,
-                startY: 0,
-                startTimer: 0,
-                stopTimer: 0,
-                currentX: 0,
-                currentY: 0,
-                initiated: false
-            };*/
-
-            this.touch = {
+            /*this.touch = {
                 startX: 0,
                 startY: 0,
                 currentX: 0,
@@ -101,7 +91,7 @@ Swipster = (function () {
                 distanceY: 0,
                 initiated: false,
                 directionLocked: false
-            };
+            };*/
 
             this.createDOM();
             this.bindEvents();
@@ -229,12 +219,12 @@ Swipster = (function () {
          */
         bindEvents: function () {
             this.$element.on('click', $.proxy(this._handleClick, this));
-            this.$inner.on('touchstart touchmove touchend', $.proxy(this._handleTouch, this));
+            //this.$inner.on('touchstart touchmove touchend', $.proxy(this._handleTouch, this));
         },
 
         unbindEvents: function () {
             this.$element.off('click', this._handleClick);
-            this.$element.off('touchstart touchmove touchend', this._handleTouch);
+            //this.$inner.off('touchstart touchmove touchend', this._handleTouch);
         },
 
         _handleClick: function (event) {
@@ -267,17 +257,13 @@ Swipster = (function () {
         /**
          * @TODO: Create separate functions for touchstart, touchmove and touchend.
          */
-        _handleTouch: function(event) {
+        /*_handleTouch: function (event) {
             var touchEvent = event.originalEvent.touches[0];
 
-            switch(event.type) {
+            switch (event.type) {
                 case 'touchstart':
                     if (this.touch.initiated) {
-                        return false;
-                    }
-
-                    if (this.$inner.hasClass('animating')) {
-                        event.preventDefault();
+                        return;
                     }
 
                     this.touch = {
@@ -298,7 +284,7 @@ Swipster = (function () {
 
                 case 'touchmove':
                     if (!this.touch.initiated) {
-                        return false;
+                        return;
                     }
 
                     this.touch.currentX = touchEvent.pageX - this.touch.startX;
@@ -317,11 +303,11 @@ Swipster = (function () {
 
                     // Dont track super small touch moves
                     if (this.touch.distanceX < 10 && this.touch.distanceY < 10) {
-                        return false;
+                        return;
                     }
 
                     // Check if we are traveling down instead of swiping
-                    if (this.touch.distanceY < this.touch.distanceX) {
+                    if (!this.touch.directionLocked && (this.touch.distanceY > this.touch.distanceX)) {
                         this.touch.initiated = false;
                         return false;
                     }
@@ -333,7 +319,7 @@ Swipster = (function () {
 
                 case 'touchend':
                     if (!this.touch.initiated) {
-                        return false;
+                        return;
                     }
 
                     if (Math.abs(this.touch.currentX) > 25) {
@@ -347,7 +333,7 @@ Swipster = (function () {
                     this.touch.initiated = false;
                     break;
             }
-        },
+        },*/
 
         /* ======================================================================
          * Public methods
@@ -421,7 +407,7 @@ Swipster = (function () {
             }
 
             // Perform actual animation
-            this.$inner.addClass('animating ' + animationClass).one('transitionend', $.proxy(this._animationEnd, this));
+            this.$inner.addClass('animating ' + animationClass).transitionEnd('transitionend', $.proxy(this._animationEnd, this));
         },
 
         _animationEnd: function (event) {
