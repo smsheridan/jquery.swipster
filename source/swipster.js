@@ -147,7 +147,7 @@ Swipster = (function () {
                 .append(template);
 
             // Bind on elements created dynamically
-            this.$inner = this.$element.children('.' + this.classes.inner);
+            this.$inner = this.$element.find('.' + this.classes.inner);
             this.$indicators = this.$element.children('.' + this.classes.indicators);
             this.$controls = this.$element.children('.' + this.classes.controls.main);
             this.$counter = this.$element.children('.' + this.classes.counter.main);
