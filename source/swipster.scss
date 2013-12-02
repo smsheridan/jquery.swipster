@@ -45,75 +45,17 @@ p {
     @include perspective(1000px);
 
     %animate {
-        @include transition(transform 0.6s ease-in-out);
+        @include transition(transform 0.5s ease-in-out);
     }
 
     .animate-to-prev {
         @extend %animate;
         @include transform(translate(100%, 0) translateZ(0));
-
-        .swipster__slide--current {
-            -webkit-animation: shrink-prev-box 0.6s ease-in-out;
-            -moz-animation: shrink-prev-box 0.6s ease-in-out;
-            -ms-animation: shrink-prev-box 0.6s ease-in-out;
-            -o-animation: shrink-prev-box 0.6s ease-in-out;
-            animation: shrink-prev-box 0.6s ease-in-out;
-        }
-
-        .swipster__slide--prev {
-            @include opacity(1);
-            @include translate3d(-100%, 0, 0);
-            @include transition(transform 0.6s ease-in-out, opacity 0.6s ease-in-out);
-        }
     }
 
     .animate-to-next {
         @extend %animate;
         @include transform(translate(-100%, 0) translateZ(0));
-
-        .swipster__slide--current {
-            -webkit-animation: shrink-next-box 0.6s ease-in-out;
-            -moz-animation: shrink-next-box 0.6s ease-in-out;
-            -ms-animation: shrink-next-box 0.6s ease-in-out;
-            -o-animation: shrink-next-box 0.6s ease-in-out;
-            animation: shrink-next-box 0.6s ease-in-out;
-        }
-
-        .swipster__slide--next {
-            @include opacity(1);
-            @include translate3d(100%, 0, 0);
-            @include transition(transform 0.6s ease-in-out, opacity 0.6s ease-in-out);
-        }
-    }
-}
-
-@-webkit-keyframes shrink-next-box {
-    from {
-        -webkit-clip-path: rectangle(0, 0, 100%, 100%);
-        clip-path: rectangle(0, 0, 100%, 100%);
-
-        @include translate3d(0, 0, 0);
-    }
-    to {
-        -webkit-clip-path: rectangle(0, 0, 60%, 100%);
-        clip-path: rectangle(0, 0, 60%, 100%);
-
-        @include translate3d(40%, 0, 0);
-    }
-}
-
-@-webkit-keyframes shrink-prev-box {
-    from {
-        -webkit-clip-path: rectangle(0, 0, 100%, 100%);
-        clip-path: rectangle(0, 0, 100%, 100%);
-
-        @include translate3d(0, 0, 0);
-    }
-    to {
-        -webkit-clip-path: rectangle(40%, 0, 60%, 100%);
-        clip-path: rectangle(40%, 0, 60%, 100%);
-
-        @include translate3d(-40%, 0, 0);
     }
 }
 
@@ -143,8 +85,6 @@ p {
 .swipster__slide--prev,
 .swipster__slide--current {
     @include translateZ(0);
-    @include backface-visibility(hidden);
-    @include perspective(1000px);
 }
 
 .swipster__slide--hidden {
@@ -160,13 +100,11 @@ p {
 }
 
 .swipster__slide--prev {
-    @include translate3d(-50%, 0, 0);
-    @include opacity(0);
+    @include transform(translate(-100%, 0) translateZ(0));
 }
 
 .swipster__slide--next {
-    @include translate3d(50%, 0, 0);
-    @include opacity(0);
+    @include transform(translate(100%, 0) translateZ(0));
 }
 
 .swipster__slide--current {
