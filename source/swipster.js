@@ -380,7 +380,7 @@ Swipster = (function () {
             this._setIndex(index);
             
             this.$inner.addClass('animating').animate({ left: direction }, 500, $.proxy(function () {
-                this.$inner.removeClass('animating').css('left', '');
+                this.$inner.removeClass('animating').css({ left: '' });
                 this._renderAll();
             }, this));
         },
