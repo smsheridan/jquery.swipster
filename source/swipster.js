@@ -369,8 +369,20 @@ Swipster = (function () {
          * ====================================================================== */
 
         _slideToSimple: function (index) {
+            var direction = '';
+
+            if (this._index.current < index) {
+                direction = '-100%';
+            } else {
+                direction = '100%';
+            }
+
             this._setIndex(index);
-            this._renderAll();
+            
+            this.$inner.addClass('animating').animate({ left: direction }, 500, $.proxy(function () {
+                this.$inner.removeClass('animating').css('left', '');
+                this._renderAll();
+            }, this));
         },
 
         _slideToAnimation: function (index) {
